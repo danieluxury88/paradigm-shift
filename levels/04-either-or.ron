@@ -1,0 +1,68 @@
+// Level data. Map legend: '#' solid in every lens, 'A' solid only in the first lens,
+// 'B' solid only in the second lens, 'S' straw (collapses when stood on),
+// 'P' player start, 'G' goal, '.' empty. Texts: en is required, de and es too (tests check it).
+(
+    title: (
+        en: "Either, or…?",
+        de: "Entweder, oder …?",
+        es: "¿O esto o aquello…?",
+    ),
+    hint: (
+        en: "Two roads are on offer. Are they really the only ones?",
+        de: "Zwei Wege werden angeboten. Sind es wirklich die einzigen?",
+        es: "Te ofrecen dos caminos. ¿De verdad son los únicos?",
+    ),
+    lenses: (
+        (
+            en: "Either/or",
+            de: "Entweder/oder",
+            es: "O esto o aquello",
+        ),
+        (
+            en: "Look for more",
+            de: "Weiter suchen",
+            es: "Buscar más",
+        ),
+    ),
+    map: [
+        "......................#.......",
+        "......................#.......",
+        "......................#.......",
+        "...............AAAAAAA#.......",
+        "......................#.......",
+        "...........AA.........#.......",
+        "..............................",
+        "........AA.................G..",
+        "...................BBB########",
+        ".....AA.........BB....#.......",
+        ".P....................#.......",
+        "##################....########",
+    ],
+    card: (
+        term: (
+            en: "False dilemma",
+            de: "Falsches Dilemma",
+            es: "Falso dilema",
+        ),
+        origin: (
+            en: "Informal fallacy, also called false dichotomy or black-and-white thinking",
+            de: "Informeller Fehlschluss, auch falsche Dichotomie oder Schwarz-Weiß-Denken genannt",
+            es: "Falacia informal, también llamada falsa dicotomía o pensamiento en blanco y negro",
+        ),
+        definition: (
+            en: "Presenting only two options as if they were the only possible ones, when others exist or both can be partly true.",
+            de: "Nur zwei Möglichkeiten so darstellen, als gäbe es keine anderen, obwohl es weitere gibt oder beide teilweise zutreffen können.",
+            es: "Presentar solo dos opciones como si fueran las únicas posibles, cuando existen otras o ambas pueden ser en parte ciertas.",
+        ),
+        example: (
+            en: "\"You are either with us or against us.\" You can agree with some points, disagree with others, or simply not know yet.",
+            de: "„Entweder bist du für uns oder gegen uns.“ Man kann manchen Punkten zustimmen, anderen widersprechen oder es einfach noch nicht wissen.",
+            es: "«O estás con nosotros o contra nosotros.» Puedes estar de acuerdo en unas cosas, en desacuerdo en otras o, simplemente, no saberlo todavía.",
+        ),
+        practice: (
+            en: "When offered two choices, ask: what would a third one be, and could both be partly right?",
+            de: "Wenn dir zwei Optionen angeboten werden, frag: Was wäre eine dritte, und könnten beide teilweise stimmen?",
+            es: "Cuando te ofrezcan dos opciones, pregunta: ¿cuál sería una tercera? ¿Podrían ambas tener parte de razón?",
+        ),
+    ),
+)

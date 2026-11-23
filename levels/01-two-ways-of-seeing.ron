@@ -1,0 +1,68 @@
+// Level data. Map legend: '#' solid in every lens, 'A' solid only in the first lens,
+// 'B' solid only in the second lens, 'S' straw (collapses when stood on),
+// 'P' player start, 'G' goal, '.' empty. Texts: en is required, de and es too (tests check it).
+(
+    title: (
+        en: "Two ways of seeing",
+        de: "Zwei Arten zu sehen",
+        es: "Dos maneras de ver",
+    ),
+    hint: (
+        en: "SHIFT changes the lens. Some ground only exists in one way of seeing.",
+        de: "SHIFT wechselt die Linse. Mancher Boden existiert nur in einer Sichtweise.",
+        es: "SHIFT cambia la lente. Hay suelo que solo existe en una manera de ver.",
+    ),
+    lenses: (
+        (
+            en: "Order",
+            de: "Ordnung",
+            es: "Orden",
+        ),
+        (
+            en: "Freedom",
+            de: "Freiheit",
+            es: "Libertad",
+        ),
+    ),
+    map: [
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "...............A...........G..",
+        "...............A.......######.",
+        "...............A..............",
+        "...............A...BB.........",
+        ".P.............A..............",
+        "####AAAAAAAA##################",
+    ],
+    card: (
+        term: (
+            en: "Paradigm",
+            de: "Paradigma",
+            es: "Paradigma",
+        ),
+        origin: (
+            en: "Thomas Kuhn, The Structure of Scientific Revolutions (1962)",
+            de: "Thomas Kuhn, Die Struktur wissenschaftlicher Revolutionen (1962)",
+            es: "Thomas Kuhn, La estructura de las revoluciones científicas (1962)",
+        ),
+        definition: (
+            en: "A shared framework of assumptions, methods and model examples. It tells a community which questions make sense and what counts as an answer.",
+            de: "Ein gemeinsamer Rahmen aus Annahmen, Methoden und Musterbeispielen. Er legt fest, welche Fragen eine Gemeinschaft für sinnvoll hält und was als Antwort gilt.",
+            es: "Un marco compartido de supuestos, métodos y ejemplos modelo. Indica a una comunidad qué preguntas tienen sentido y qué cuenta como respuesta.",
+        ),
+        example: (
+            en: "For centuries astronomers explained the planets inside an Earth-centred model. The same sky later made more sense in a Sun-centred one: the data did not change, the frame did.",
+            de: "Jahrhundertelang erklärten Astronomen die Planeten in einem erdzentrierten Modell. Derselbe Himmel ergab später in einem sonnenzentrierten Modell mehr Sinn: Nicht die Daten änderten sich, sondern der Rahmen.",
+            es: "Durante siglos, los astrónomos explicaron los planetas dentro de un modelo centrado en la Tierra. El mismo cielo tuvo después más sentido en uno centrado en el Sol: no cambiaron los datos, cambió el marco.",
+        ),
+        practice: (
+            en: "When an argument feels absurd, ask which frame would make it sensible before judging it.",
+            de: "Wenn dir ein Argument absurd vorkommt, frag dich zuerst, in welchem Rahmen es sinnvoll wäre.",
+            es: "Cuando un argumento te parezca absurdo, pregúntate en qué marco tendría sentido antes de juzgarlo.",
+        ),
+    ),
+)

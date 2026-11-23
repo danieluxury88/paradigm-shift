@@ -1,0 +1,36 @@
+[package]
+name = "paradigm-shift"
+version = "0.1.0"
+edition = "2024"
+description = "A puzzle platformer about seeing the same world through different paradigms. GitHub Game Off 2026 (theme: SHIFT)."
+license = "MIT"
+
+[dependencies]
+# Only the 2D and UI profiles: no 3D renderer, which keeps builds and the web bundle smaller.
+bevy = { version = "0.20.1", default-features = false, features = ["2d", "ui"] }
+ron = "0.12.3"
+serde = { version = "1.0.229", features = ["derive"] }
+# Remote control for coding agents (BRP), only with the `brp` feature. No gamepad support needed.
+bevy_brp_extras = { version = "0.23.0", optional = true, default-features = false, features = ["diagnostics", "ui"] }
+
+[features]
+# Faster incremental native builds while developing (`make run`). Never use it for release or web builds.
+dev = ["bevy/dynamic_linking"]
+# Lets a coding agent inspect and drive the running game through the Bevy Remote Protocol
+# (bevy_brp_mcp; HTTP on 127.0.0.1:15702). Native development only (`make brp`), never for release or web builds.
+brp = ["dep:bevy_brp_extras"]
+
+# Compile our own code with light optimization so debugging stays usable...
+[profile.dev]
+opt-level = 1
+
+# ...but optimize dependencies (Bevy) fully, otherwise the game runs very slowly in debug.
+[profile.dev.package."*"]
+opt-level = 3
+
+# Small, fast release builds; the web bundle is downloaded by every player.
+[profile.release]
+opt-level = "s"
+lto = "thin"
+codegen-units = 1
+strip = true

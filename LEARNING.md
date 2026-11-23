@@ -1,0 +1,37 @@
+# Learning Rust with Paradigm Shift
+
+A reading guide to the code: where each Rust and Bevy concept appears, in a sensible order. Read the file, find the concept, then change something small and run `make run` to see what happens.
+
+Last verified: 2026-11-21
+
+## Suggested reading order
+
+| Step | File | Rust concepts | Bevy concepts |
+|---|---|---|---|
+| 1 | `src/main.rs` | modules (`mod`), `use`, constants, `#[derive]` | `App`, plugins, `DefaultPlugins`, states (`AppState`), `Startup` systems |
+| 2 | `src/lens.rs` | `enum`, `impl` blocks, `match`, `Copy` types, match guards (`if owner == lens.0`) | resources (`ActiveLens`), messages (`ShiftBlocked`), change detection (`is_changed`), run conditions (`in_state`) |
+| 3 | `src/level.rs` | structs, `Result<T, String>` and `?`, iterators (`map`, `filter`, `find_map`, `collect`), `Option` and `let … else`, `include_str!`, `serde` + RON, unit tests (`#[cfg(test)]`) | spawning entities, components (`Tile`), `OnEnter`, `DespawnOnExit` |
+| 4 | `src/player.rs` | mutable borrows (`&mut`), tuples in `match`, associated constants (`Player::HALF_SIZE`) | queries (`Query`, `single_mut`), `Time`, keyboard input (`ButtonInput<KeyCode>`), system ordering (`.chain()`, `.after()`), `NextState` |
+| 5 | `src/hud.rs` | `format!`, `String` vs `&str` | UI (`Node`, `Text`, `TextFont`, `TextColor`), `children!`, marker components, `MessageReader` |
+| 6 | `src/card.rs` | borrowing data from a resource | a second state's screen, built from level data |
+| 7 | `src/i18n.rs` | `match` on a tuple `(key, language)`, `&'static str`, `#[serde(default)]`, `include_bytes!` | replacing the default font asset, rebuilding UI when a resource changes (`is_changed`, `is_added`) |
+| 8 | `src/straw.rs` | `Option<f32>` as a timer, `as_mut`, `iter_mut().flatten()` | systems ordered after another plugin's system (`.after`), `Visibility`, messages between plugins (`Respawned`) |
+| 9 | `src/sim_tests.rs` | closures (`walk_until`), `enum` with struct variants (`Step::Hop { .. }`), `panic!` with context | running plugins headless (`MinimalPlugins`), a fixed clock (`TimeUpdateStrategy`), simulated input, querying the `World` directly |
+
+## Exercises
+
+Small changes, roughly from easiest to hardest:
+
+1. Change `JUMP_SPEED` or `GRAVITY` in `src/player.rs` and feel the difference. Which value makes level 2 impossible?
+2. Change the lens colours in `Lens::color` (`src/lens.rs`).
+3. Add a new level in `levels/` (see "Adding a level" in the README). `make test` tells you if the map is broken.
+4. Add a `C` cell that kills the player (sends them back to the start) in every lens: a new `Cell` variant, a `match` arm in `Cell::from_char`, and a check in `player.rs`. The compiler lists every `match` you forgot to update.
+5. Count how many times the player shifted in a level and show it on the concept card. You need a new resource.
+6. Add a codex: a list of the concept cards unlocked so far, opened with TAB.
+7. Make straw collapse cell by cell, starting where the player stands, instead of all at once.
+
+## Notes
+
+- `cargo` commands take a while the first time because Bevy has hundreds of dependencies; later builds only recompile your code.
+- The compiler's error messages usually say exactly what to change. Read the whole message, including the `help:` lines.
+- Bevy changes its API between versions. This project uses Bevy 0.20; examples written for older versions may not compile unchanged.

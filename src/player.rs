@@ -1,0 +1,188 @@
+//! The player: keyboard movement, gravity, jumping and tile collisions.
+//!
+//! Collisions are resolved one axis at a time: move horizontally and push out
+//! of walls, then move vertically and push out of floors and ceilings. Simple,
+//! and good enough for a tile-based platformer.
+
+use bevy::prelude::*;
+
+use crate::AppState;
+use crate::lens::ActiveLens;
+use crate::level::{Cell, LevelGrid};
+
+const RUN_SPEED: f32 = 220.0;
+const JUMP_SPEED: f32 = 520.0;
+const GRAVITY: f32 = 1400.0;
+const MAX_FALL_SPEED: f32 = 900.0;
+
+#[derive(Component, Default, Reflect)]
+#[reflect(Component)]
+pub struct Player {
+    velocity: Vec2,
+    pub on_ground: bool,
+}
+
+/// Sent when the player is put back at the start (fall or R), so other
+/// systems can reset the level, e.g. rebuild collapsed straw.
+#[derive(Message)]
+pub struct Respawned;
+
+impl Player {
+    /// Half width and half height of the player's collision box.
+    pub const HALF_SIZE: Vec2 = Vec2::new(11.0, 14.0);
+}
+
+pub struct PlayerPlugin;
+
+impl Plugin for PlayerPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_message::<Respawned>()
+            .add_systems(
+                OnEnter(AppState::Playing),
+                spawn_player.after(crate::level::spawn_level),
+            )
+            .add_systems(
+                Update,
+                (move_player, respawn_if_fallen, reach_goal)
+                    .chain()
+                    .run_if(in_state(AppState::Playing)),
+            );
+    }
+}
+
+fn spawn_player(mut commands: Commands, grid: Res<LevelGrid>) {
+    let start = grid.find(Cell::Start).expect("validated at startup");
+    commands.spawn((
+        Player::default(),
+        Sprite::from_color(Color::srgb(0.95, 0.95, 0.95), Player::HALF_SIZE * 2.0),
+        Transform::from_translation(start.extend(1.0)),
+        DespawnOnExit(AppState::Playing),
+    ));
+}
+
+pub fn move_player(
+    time: Res<Time>,
+    keys: Res<ButtonInput<KeyCode>>,
+    grid: Res<LevelGrid>,
+    lens: Res<ActiveLens>,
+    mut query: Query<(&mut Player, &mut Transform)>,
+) {
+    let Ok((mut player, mut transform)) = query.single_mut() else {
+        return;
+    };
+    // Cap the time step so a slow frame cannot make the player skip through a tile.
+    let dt = time.delta_secs().min(1.0 / 30.0);
+
+    let left = keys.any_pressed([KeyCode::ArrowLeft, KeyCode::KeyA]);
+    let right = keys.any_pressed([KeyCode::ArrowRight, KeyCode::KeyD]);
+    player.velocity.x = match (left, right) {
+        (true, false) => -RUN_SPEED,
+        (false, true) => RUN_SPEED,
+        _ => 0.0,
+    };
+
+    let jump = keys.any_just_pressed([KeyCode::Space, KeyCode::ArrowUp, KeyCode::KeyW]);
+    if jump && player.on_ground {
+        player.velocity.y = JUMP_SPEED;
+    }
+    player.velocity.y = (player.velocity.y - GRAVITY * dt).max(-MAX_FALL_SPEED);
+
+    let mut position = transform.translation.truncate();
+
+    // Horizontal pass.
+    let horizontal_direction = player.velocity.x;
+    position.x += horizontal_direction * dt;
+    let mut horizontal_collision: Option<f32> = None;
+    for (col, row, cell) in grid.cells_in_box(position, Player::HALF_SIZE) {
+        if !cell.is_solid_in(lens.0) {
+            continue;
+        }
+        let tile = grid.cell_center(col, row);
+        let limit = crate::TILE / 2.0 + Player::HALF_SIZE.x;
+        let contact = if horizontal_direction > 0.0 {
+            tile.x - limit
+        } else {
+            tile.x + limit
+        };
+        horizontal_collision = Some(match horizontal_collision {
+            Some(previous) if horizontal_direction > 0.0 => previous.min(contact),
+            Some(previous) => previous.max(contact),
+            None => contact,
+        });
+    }
+    if let Some(contact) = horizontal_collision {
+        position.x = contact;
+        player.velocity.x = 0.0;
+    }
+
+    // Vertical pass.
+    let previous_feet = position.y - Player::HALF_SIZE.y;
+    let previous_head = position.y + Player::HALF_SIZE.y;
+    let horizontal_position = position.x;
+    position.y += player.velocity.y * dt;
+    player.on_ground = false;
+    for (col, row, cell) in grid.cells_in_box(position, Player::HALF_SIZE) {
+        if !cell.is_solid_in(lens.0) {
+            continue;
+        }
+        let tile = grid.cell_center(col, row);
+        let tile_top = tile.y + crate::TILE / 2.0;
+        let tile_bottom = tile.y - crate::TILE / 2.0;
+        if player.velocity.y <= 0.0 && previous_feet >= tile_top {
+            position.y = tile_top + Player::HALF_SIZE.y;
+            player.on_ground = true;
+            player.velocity.y = 0.0;
+        } else if player.velocity.y > 0.0 && previous_head <= tile_bottom {
+            position.y = tile_bottom - Player::HALF_SIZE.y;
+            player.velocity.y = 0.0;
+        } else {
+            // Vertical movement entered the side of a tile. Keep the player
+            // out of the wall instead of treating it like a floor or ceiling.
+            let side = crate::TILE / 2.0 + Player::HALF_SIZE.x;
+            position.x = if horizontal_position <= tile.x {
+                tile.x - side
+            } else {
+                tile.x + side
+            };
+            player.velocity.x = 0.0;
+        }
+    }
+
+    transform.translation = position.extend(transform.translation.z);
+}
+
+/// Falling into the void, or pressing R, puts the player back at the start.
+fn respawn_if_fallen(
+    keys: Res<ButtonInput<KeyCode>>,
+    grid: Res<LevelGrid>,
+    mut query: Query<(&mut Player, &mut Transform)>,
+    mut respawned: MessageWriter<Respawned>,
+) {
+    let Ok((mut player, mut transform)) = query.single_mut() else {
+        return;
+    };
+    let fell = transform.translation.y < grid.bottom() - crate::TILE * 2.0;
+    if fell || keys.just_pressed(KeyCode::KeyR) {
+        let start = grid.find(Cell::Start).expect("validated at startup");
+        transform.translation = start.extend(transform.translation.z);
+        player.velocity = Vec2::ZERO;
+        respawned.write(Respawned);
+    }
+}
+
+fn reach_goal(
+    grid: Res<LevelGrid>,
+    query: Query<&Transform, With<Player>>,
+    mut next: ResMut<NextState<AppState>>,
+) {
+    let Ok(transform) = query.single() else {
+        return;
+    };
+    let touching_goal = grid
+        .cells_in_box(transform.translation.truncate(), Player::HALF_SIZE)
+        .iter()
+        .any(|&(_, _, cell)| cell == Cell::Goal);
+    if touching_goal {
+        next.set(AppState::Card);
+    }
+}

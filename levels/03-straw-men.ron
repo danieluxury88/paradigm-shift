@@ -1,0 +1,68 @@
+// Level data. Map legend: '#' solid in every lens, 'A' solid only in the first lens,
+// 'B' solid only in the second lens, 'S' straw (collapses when stood on),
+// 'P' player start, 'G' goal, '.' empty. Texts: en is required, de and es too (tests check it).
+(
+    title: (
+        en: "Men of straw",
+        de: "Strohmänner",
+        es: "Hombres de paja",
+    ),
+    hint: (
+        en: "Some ground only looks solid when all you want is to win. Look again.",
+        de: "Mancher Boden wirkt nur fest, wenn du bloß gewinnen willst. Schau noch einmal hin.",
+        es: "Hay suelo que solo parece firme cuando solo quieres ganar. Vuelve a mirar.",
+    ),
+    lenses: (
+        (
+            en: "Win the debate",
+            de: "Debatte gewinnen",
+            es: "Ganar el debate",
+        ),
+        (
+            en: "Understand the other",
+            de: "Andere verstehen",
+            es: "Entender al otro",
+        ),
+    ),
+    map: [
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "......BB..BB..BB..............",
+        ".P.........................G..",
+        "#####SSSSSSSSSSSSS############",
+    ],
+    card: (
+        term: (
+            en: "Straw man",
+            de: "Strohmann-Argument",
+            es: "Falacia del hombre de paja",
+        ),
+        origin: (
+            en: "A way of missing the point (ignoratio elenchi), a family of fallacies described since Aristotle's Sophistical Refutations",
+            de: "Eine Form, am Thema vorbeizureden (ignoratio elenchi); diese Fehlschlüsse werden seit Aristoteles' Sophistischen Widerlegungen beschrieben",
+            es: "Una forma de no ir al punto (ignoratio elenchi), una familia de falacias descrita desde las Refutaciones sofísticas de Aristóteles",
+        ),
+        definition: (
+            en: "Replacing someone's real position with a weaker, distorted version that is easier to knock down, then attacking that version instead.",
+            de: "Die tatsächliche Position einer Person durch eine schwächere, verzerrte Version ersetzen, die leichter zu widerlegen ist, und dann diese Version angreifen.",
+            es: "Sustituir la postura real de alguien por una versión más débil y distorsionada, más fácil de derribar, y atacar esa versión en lugar de la original.",
+        ),
+        example: (
+            en: "\"We should spend less on the military.\" \"So you want to leave the country defenceless?\" Nobody said that: the reply attacks a position that is easier to beat.",
+            de: "„Wir sollten weniger für das Militär ausgeben.“ „Du willst das Land also schutzlos lassen?“ Das hat niemand gesagt: Die Antwort greift eine Position an, die leichter zu schlagen ist.",
+            es: "«Deberíamos gastar menos en el ejército.» «¿Así que quieres dejar el país indefenso?» Nadie dijo eso: la respuesta ataca una postura más fácil de vencer.",
+        ),
+        practice: (
+            en: "Steelman instead: restate the other view in its strongest form before you answer it.",
+            de: "Bau stattdessen einen Stahlmann: Gib die andere Sicht in ihrer stärksten Form wieder, bevor du antwortest.",
+            es: "Haz lo contrario, un «hombre de acero»: reformula la otra postura en su versión más sólida antes de responder.",
+        ),
+    ),
+)

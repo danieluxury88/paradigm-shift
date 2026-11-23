@@ -1,0 +1,75 @@
+//! Paradigm Shift: a puzzle platformer about seeing the same world through
+//! different paradigms. Entry point: builds the Bevy app and wires the plugins.
+
+#[cfg(feature = "brp")]
+mod brp;
+mod card;
+mod hud;
+mod i18n;
+mod lens;
+mod level;
+mod player;
+#[cfg(test)]
+mod sim_tests;
+mod straw;
+
+use bevy::prelude::*;
+
+/// Size of one map cell in world units (pixels at 1:1 zoom).
+pub const TILE: f32 = 32.0;
+
+/// The two screens of the game loop: playing a level, then reading the concept
+/// card that names what the level taught.
+#[derive(States, Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum AppState {
+    #[default]
+    Playing,
+    Card,
+}
+
+fn main() {
+    let mut app = App::new();
+    app.add_plugins(DefaultPlugins.set(WindowPlugin {
+        primary_window: Some(Window {
+            title: "Paradigm Shift".into(),
+            // On the web, render into the <canvas id="bevy"> from index.html
+            // and follow the browser window size.
+            canvas: Some("#bevy".into()),
+            fit_canvas_to_parent: true,
+            ..default()
+        }),
+        ..default()
+    }))
+    .init_state::<AppState>()
+    .add_plugins((
+        // First: it replaces the default font that the other plugins' texts use.
+        i18n::I18nPlugin,
+        level::LevelPlugin,
+        lens::LensPlugin,
+        player::PlayerPlugin,
+        hud::HudPlugin,
+        card::CardPlugin,
+        straw::StrawPlugin,
+    ))
+    .add_systems(Startup, spawn_camera);
+
+    #[cfg(feature = "brp")]
+    app.add_plugins(brp::BrpPlugin);
+
+    // Development shortcut, left out of release builds: N solves the level.
+    #[cfg(debug_assertions)]
+    app.add_systems(Update, skip_level.run_if(in_state(AppState::Playing)));
+
+    app.run();
+}
+
+#[cfg(debug_assertions)]
+fn skip_level(keys: Res<ButtonInput<KeyCode>>, mut next: ResMut<NextState<AppState>>) {
+    if keys.just_pressed(KeyCode::KeyN) {
+        next.set(AppState::Card);
+    }
+}
+
+fn spawn_camera(mut commands: Commands) {
+    commands.spawn(Camera2d);
+}

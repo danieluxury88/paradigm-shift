@@ -1,0 +1,68 @@
+// Level data. Map legend: '#' solid in every lens, 'A' solid only in the first lens,
+// 'B' solid only in the second lens, 'S' straw (collapses when stood on),
+// 'P' player start, 'G' goal, '.' empty. Texts: en is required, de and es too (tests check it).
+(
+    title: (
+        en: "Inside and outside",
+        de: "Innen und außen",
+        es: "Dentro y fuera",
+    ),
+    hint: (
+        en: "No single view crosses the pit. Jump, then SHIFT while in the air.",
+        de: "Keine Sichtweise allein überquert die Grube. Spring und drück SHIFT in der Luft.",
+        es: "Ninguna mirada sola cruza el foso. Salta y pulsa SHIFT en el aire.",
+    ),
+    lenses: (
+        (
+            en: "Outsider (etic)",
+            de: "Außen (etisch)",
+            es: "Fuera (ético)",
+        ),
+        (
+            en: "Insider (emic)",
+            de: "Innen (emisch)",
+            es: "Dentro (émico)",
+        ),
+    ),
+    map: [
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "................BB............",
+        ".............AA....AA.........",
+        "..........BB..........BB......",
+        ".P.....AA..................G..",
+        "######..................######",
+    ],
+    card: (
+        term: (
+            en: "Emic and etic",
+            de: "Emisch und etisch",
+            es: "Émico y ético",
+        ),
+        origin: (
+            en: "Kenneth Pike (1954); developed in anthropology by Marvin Harris",
+            de: "Kenneth Pike (1954); in der Anthropologie weiterentwickelt von Marvin Harris",
+            es: "Kenneth Pike (1954); desarrollado en antropología por Marvin Harris",
+        ),
+        definition: (
+            en: "An emic account describes a culture in the terms its own members use and find meaningful. An etic account uses an outside observer's categories, so that cultures can be compared.",
+            de: "Eine emische Beschreibung erklärt eine Kultur mit den Begriffen, die ihre Mitglieder selbst verwenden und für bedeutsam halten. Eine etische Beschreibung nutzt die Kategorien eines Beobachters von außen, damit sich Kulturen vergleichen lassen.",
+            es: "Una descripción émica explica una cultura con los términos que sus propios miembros usan y consideran significativos. Una descripción ética usa las categorías de un observador externo, para poder comparar culturas.",
+        ),
+        example: (
+            en: "A shared meal is, emically, a family ritual with its own rules; etically, a pattern of food distribution. Each view sees something the other misses.",
+            de: "Ein gemeinsames Essen ist emisch ein Familienritual mit eigenen Regeln, etisch ein Muster der Nahrungsverteilung. Jede Sicht erkennt etwas, das der anderen entgeht.",
+            es: "Una comida compartida es, en términos émicos, un ritual familiar con sus propias reglas; en términos éticos, un patrón de distribución de alimentos. Cada mirada ve algo que la otra no ve.",
+        ),
+        practice: (
+            en: "Describe the other side's view in words they would accept as fair, then add your outside analysis.",
+            de: "Beschreib die Sicht der anderen Seite so, dass sie sie als fair akzeptieren würde, und ergänze erst dann deine Analyse von außen.",
+            es: "Describe la postura del otro con palabras que aceptaría como justas y solo después añade tu análisis desde fuera.",
+        ),
+    ),
+)
