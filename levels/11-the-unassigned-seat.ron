@@ -1,0 +1,71 @@
+// World 3: the traveler helps design a rule before knowing who will depend on it.
+(
+    world: (
+        en: "The Common Ground",
+        de: "Der gemeinsame Grund",
+        es: "El terreno común",
+    ),
+    title: (
+        en: "The unassigned seat",
+        de: "Der noch unbesetzte Platz",
+        es: "El lugar sin asignar",
+    ),
+    hint: (
+        en: "Choose a crossing before learning whose home lies on each bank.",
+        de: "Wähle einen Übergang, bevor du weißt, wessen Zuhause an welchem Ufer liegt.",
+        es: "Elige un cruce antes de saber de quién es cada hogar en las orillas.",
+    ),
+    lenses: (
+        (
+            en: "The rule maker",
+            de: "Die regelsetzende Person",
+            es: "Quien establece la regla",
+        ),
+        (
+            en: "The person affected",
+            de: "Die betroffene Person",
+            es: "Quien vive sus efectos",
+        ),
+    ),
+    map: [
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "............BB................",
+        ".........AA....AA.............",
+        "......BB..........BB..........",
+        "..P..................AA.....G.",
+        "######..................######",
+    ],
+    card: (
+        term: (
+            en: "The veil of ignorance",
+            de: "Der Schleier des Nichtwissens",
+            es: "El velo de la ignorancia",
+        ),
+        origin: (
+            en: "John Rawls, A Theory of Justice (1971)",
+            de: "John Rawls, Eine Theorie der Gerechtigkeit (1971)",
+            es: "John Rawls, Teoría de la justicia (1971)",
+        ),
+        definition: (
+            en: "A thought experiment: choose principles for a society without knowing which position you will occupy in it.",
+            de: "Ein Gedankenexperiment: Wähle Grundsätze für eine Gesellschaft, ohne zu wissen, welchen Platz du darin einnehmen wirst.",
+            es: "Un experimento mental: elige principios para una sociedad sin saber qué posición ocuparás en ella.",
+        ),
+        example: (
+            en: "The traveler agrees on bridge rules before learning whether they will live upstream, downstream or on the island between.",
+            de: "Die reisende Person einigt sich auf Brückenregeln, bevor sie weiß, ob sie flussaufwärts, flussabwärts oder auf der Insel dazwischen leben wird.",
+            es: "La persona viajera acuerda las reglas del puente sin saber si vivirá río arriba, río abajo o en la isla intermedia.",
+        ),
+        practice: (
+            en: "Before setting a rule, imagine having to live with it from the least protected position.",
+            de: "Stell dir vor, du müsstest eine Regel aus der am wenigsten geschützten Position heraus erleben, bevor du sie festlegst.",
+            es: "Antes de fijar una regla, imagina tener que vivirla desde la posición menos protegida.",
+        ),
+    ),
+)

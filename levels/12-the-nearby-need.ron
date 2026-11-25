@@ -1,0 +1,71 @@
+// World 3 finale: the traveler balances shared rules with the needs of a person nearby.
+(
+    world: (
+        en: "The Common Ground",
+        de: "Der gemeinsame Grund",
+        es: "El terreno común",
+    ),
+    title: (
+        en: "The nearby need",
+        de: "Das Bedürfnis vor Ort",
+        es: "La necesidad cercana",
+    ),
+    hint: (
+        en: "The same rule reaches everyone. Its effects do not. Enter both perspectives before crossing.",
+        de: "Dieselbe Regel gilt für alle, doch ihre Folgen sind verschieden. Wechsle vor dem Übergang in beide Perspektiven.",
+        es: "La misma regla se aplica a todos, pero sus efectos no son iguales. Entra en ambas perspectivas antes de cruzar.",
+    ),
+    lenses: (
+        (
+            en: "The shared rule",
+            de: "Die gemeinsame Regel",
+            es: "La regla común",
+        ),
+        (
+            en: "The nearby need",
+            de: "Das konkrete Bedürfnis",
+            es: "La necesidad cercana",
+        ),
+    ),
+    map: [
+        "......................#.......",
+        "......................#.......",
+        "......................#.......",
+        "...............BBBBBBB#.......",
+        "......................#.......",
+        "...........BB.........#.......",
+        "..............................",
+        "........BB.................G..",
+        "...................AAA########",
+        ".....BB.........AA....#.......",
+        ".P....................#.......",
+        "##################....########",
+    ],
+    card: (
+        term: (
+            en: "Ethics of care",
+            de: "Ethik der Fürsorge",
+            es: "Ética del cuidado",
+        ),
+        origin: (
+            en: "Carol Gilligan, In a Different Voice (1982); developed by later care ethicists",
+            de: "Carol Gilligan, Die andere Stimme (1982); von späteren Vertreterinnen der Fürsorgeethik weiterentwickelt",
+            es: "Carol Gilligan, La moral y la teoría (1982); desarrollada por pensadoras posteriores de la ética del cuidado",
+        ),
+        definition: (
+            en: "Care ethics asks how relationships, dependency and concrete responsibilities shape moral choices, alongside general rules and rights.",
+            de: "Die Fürsorgeethik fragt, wie Beziehungen, Abhängigkeiten und konkrete Verantwortung moralische Entscheidungen neben allgemeinen Regeln und Rechten prägen.",
+            es: "La ética del cuidado pregunta cómo las relaciones, la dependencia y las responsabilidades concretas influyen en las decisiones morales junto con las reglas y los derechos generales.",
+        ),
+        example: (
+            en: "A shared bridge rule is fair in form, but a neighbor who cannot use the steep steps needs the community to notice its effects.",
+            de: "Eine gemeinsame Brückenregel ist formal gerecht, doch eine Nachbarin, die die steilen Stufen nicht nutzen kann, braucht eine Gemeinschaft, die die Folgen bemerkt.",
+            es: "Una regla común para el puente puede ser justa en su forma, pero una vecina que no puede subir los escalones necesita que la comunidad vea sus efectos.",
+        ),
+        practice: (
+            en: "Ask both what rule should apply and who will need help living under it.",
+            de: "Frag sowohl, welche Regel gelten soll, als auch, wer Unterstützung braucht, um mit ihr zu leben.",
+            es: "Pregunta tanto qué regla debería aplicarse como quién necesitará apoyo para vivir con ella.",
+        ),
+    ),
+)

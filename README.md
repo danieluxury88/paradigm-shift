@@ -2,6 +2,8 @@
 
 A puzzle platformer about seeing the same world through different paradigms. Press SHIFT to change lens: ground that is solid in one way of seeing is only a faint outline in the other, and no single lens reaches the goal. Each level makes you experience one idea from philosophy, anthropology, communication or argumentation, then a concept card names it.
 
+The longer-term story follows one traveler across multiple worlds, entering the perspectives of the people who live in them. The opening world has six levels; two further worlds, The Listening City and The Common Ground, extend the playable draft to twelve levels.
+
 Made in Rust with [Bevy](https://bevyengine.org) for [GitHub Game Off 2026](https://itch.io/jam/game-off-2026) (theme: SHIFT). Playable in English, German and Spanish.
 
 Last verified: 2026-11-23
@@ -20,12 +22,20 @@ Last verified: 2026-11-23
 
 ## Levels
 
-| # | Level | Lenses | Concept |
-|---|---|---|---|
-| 1 | Two ways of seeing | Order / Freedom | Paradigm (Kuhn) |
-| 2 | Inside and outside | Outsider (etic) / Insider (emic) | Emic and etic (Pike, Harris) |
-| 3 | Men of straw | Win the debate / Understand the other | Straw man |
-| 4 | Either, or…? | Either/or / Look for more | False dilemma |
+| # | World | Level | Perspectives | Concept |
+|---|---|---|---|---|
+| 1 | The First Crossing | Two ways of seeing | Order / Freedom | Paradigm (Kuhn) |
+| 2 | The First Crossing | Inside and outside | Outsider (etic) / Insider (emic) | Emic and etic (Pike, Harris) |
+| 3 | The First Crossing | Men of straw | Win the debate / Understand the other | Straw man |
+| 4 | The First Crossing | Either, or…? | Either/or / Look for more | False dilemma |
+| 5 | The First Crossing | The unfitting star | The old map / The new map | Anomaly (Kuhn) |
+| 6 | The First Crossing | The shared crossing | What I was told / What I found | Synthesis |
+| 7 | The Listening City | Signal and noise | The sender / The listener | Signal and noise (Shannon) |
+| 8 | The Listening City | The silent reply | What was said / What was left unsaid | One cannot not communicate (Watzlawick) |
+| 9 | The Listening City | A fair reading | The quick reply / The charitable reading | Principle of charity |
+| 10 | The Common Ground | The borrowed answer | The expert's map / The residents' account | Appeal to authority |
+| 11 | The Common Ground | The unassigned seat | The rule maker / The person affected | Veil of ignorance (Rawls) |
+| 12 | The Common Ground | The nearby need | The shared rule / The nearby need | Ethics of care |
 
 The planned concepts and the full design are in [docs/design.md](docs/design.md).
 

@@ -29,7 +29,8 @@ fn spawn_card(
     fonts: Res<Fonts>,
 ) {
     let lang = *language;
-    let card = &levels.current().card;
+    let level = levels.current();
+    let card = &level.card;
     let size = |px: f32| TextFont {
         font_size: FontSize::Px(px),
         ..default()
@@ -64,6 +65,14 @@ fn spawn_card(
                 ..default()
             },
             children![
+                (
+                    Text::new(level.world.get(lang)),
+                    TextFont {
+                        font: fonts.bold.clone().into(),
+                        ..size(15.0)
+                    },
+                    TextColor(Color::srgb(0.65, 0.70, 0.70)),
+                ),
                 (
                     Text::new(ui(lang, Ui::ConceptUnlocked)),
                     TextFont {

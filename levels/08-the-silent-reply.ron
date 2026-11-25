@@ -1,0 +1,71 @@
+// World 2: the traveler considers what silence communicates in a strained exchange.
+(
+    world: (
+        en: "The Listening City",
+        de: "Die Stadt, die zuhört",
+        es: "La ciudad que escucha",
+    ),
+    title: (
+        en: "The silent reply",
+        de: "Die stille Antwort",
+        es: "La respuesta silenciosa",
+    ),
+    hint: (
+        en: "No one answered the bell. The empty windows still told the traveler something.",
+        de: "Niemand antwortete auf die Glocke. Die leeren Fenster erzählten der reisenden Person trotzdem etwas.",
+        es: "Nadie respondió a la campana. Aun así, las ventanas vacías le dijeron algo a la persona viajera.",
+    ),
+    lenses: (
+        (
+            en: "What was said",
+            de: "Was gesagt wurde",
+            es: "Lo que se dijo",
+        ),
+        (
+            en: "What was left unsaid",
+            de: "Was unausgesprochen blieb",
+            es: "Lo que quedó sin decir",
+        ),
+    ),
+    map: [
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "......BB..BB..BB..............",
+        ".P.........................G..",
+        "#####SSSSSSSSSSSSS############",
+    ],
+    card: (
+        term: (
+            en: "One cannot not communicate",
+            de: "Man kann nicht nicht kommunizieren",
+            es: "Es imposible no comunicar",
+        ),
+        origin: (
+            en: "Paul Watzlawick, Janet Beavin Bavelas and Don Jackson, Pragmatics of Human Communication (1967)",
+            de: "Paul Watzlawick, Janet Beavin Bavelas und Don Jackson, Menschliche Kommunikation (1967)",
+            es: "Paul Watzlawick, Janet Beavin Bavelas y Don Jackson, Teoría de la comunicación humana (1967)",
+        ),
+        definition: (
+            en: "In an interaction, silence and withdrawal can be interpreted as communication even when no words are spoken. The interpretation may still be mistaken.",
+            de: "In einer Begegnung können Schweigen und Rückzug als Kommunikation verstanden werden, auch wenn kein Wort fällt. Diese Deutung kann trotzdem falsch sein.",
+            es: "En una interacción, el silencio y el retraimiento pueden interpretarse como comunicación aunque no se digan palabras. Esa interpretación también puede ser errónea.",
+        ),
+        example: (
+            en: "The closed shutters might mean anger, fear, exhaustion or simply that nobody is home. The traveler has to look for context.",
+            de: "Die geschlossenen Fensterläden könnten Ärger, Angst, Erschöpfung oder einfach bedeuten, dass niemand zu Hause ist. Die reisende Person braucht mehr Kontext.",
+            es: "Las contraventanas cerradas podrían significar enojo, miedo, cansancio o simplemente que no hay nadie en casa. La persona viajera necesita contexto.",
+        ),
+        practice: (
+            en: "Notice what silence makes you assume, then check whether the other person would describe it the same way.",
+            de: "Achte darauf, was du aus Schweigen schließt, und frag, ob die andere Person es genauso beschreiben würde.",
+            es: "Observa qué supones ante el silencio y comprueba si la otra persona lo describiría igual.",
+        ),
+    ),
+)

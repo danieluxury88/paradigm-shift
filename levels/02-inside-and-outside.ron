@@ -2,6 +2,11 @@
 // 'B' solid only in the second lens, 'S' straw (collapses when stood on),
 // 'P' player start, 'G' goal, '.' empty. Texts: en is required, de and es too (tests check it).
 (
+    world: (
+        en: "The First Crossing",
+        de: "Der erste Übergang",
+        es: "El primer cruce",
+    ),
     title: (
         en: "Inside and outside",
         de: "Innen und außen",

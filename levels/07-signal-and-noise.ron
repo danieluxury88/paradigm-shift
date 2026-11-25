@@ -1,0 +1,71 @@
+// World 2: the traveler enters the perspectives of a sender and a listener.
+(
+    world: (
+        en: "The Listening City",
+        de: "Die Stadt, die zuhört",
+        es: "La ciudad que escucha",
+    ),
+    title: (
+        en: "Signal and noise",
+        de: "Signal und Rauschen",
+        es: "Señal y ruido",
+    ),
+    hint: (
+        en: "A warning crossed the city, but every listener heard it through a different kind of noise.",
+        de: "Eine Warnung durchquerte die Stadt, doch jede Person hörte sie durch anderes Rauschen.",
+        es: "Una advertencia cruzó la ciudad, pero cada persona la oyó entre un ruido distinto.",
+    ),
+    lenses: (
+        (
+            en: "The sender",
+            de: "Die sendende Person",
+            es: "Quien envía",
+        ),
+        (
+            en: "The listener",
+            de: "Die zuhörende Person",
+            es: "Quien escucha",
+        ),
+    ),
+    map: [
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "...............B...........G..",
+        "...............B.......######.",
+        "...............B..............",
+        "...............B...AA.........",
+        ".P.............B..............",
+        "####BBBBBBBB##################",
+    ],
+    card: (
+        term: (
+            en: "Signal and noise",
+            de: "Signal und Rauschen",
+            es: "Señal y ruido",
+        ),
+        origin: (
+            en: "Claude Shannon, A Mathematical Theory of Communication (1948)",
+            de: "Claude Shannon, A Mathematical Theory of Communication (1948)",
+            es: "Claude Shannon, A Mathematical Theory of Communication (1948)",
+        ),
+        definition: (
+            en: "Communication sends a signal through a channel where noise can interfere. What counts as noise depends partly on what the receiver needs to notice.",
+            de: "Kommunikation überträgt ein Signal durch einen Kanal, in dem Rauschen stören kann. Was als Rauschen gilt, hängt auch davon ab, worauf die empfangende Person achten muss.",
+            es: "La comunicación envía una señal por un canal donde el ruido puede interferir. Qué cuenta como ruido depende en parte de lo que la persona receptora necesita notar.",
+        ),
+        example: (
+            en: "The sender marked the bridge as open. The listener, surrounded by alarms, noticed only the warning to stay back.",
+            de: "Die sendende Person markierte die Brücke als offen. Die zuhörende Person hörte zwischen den Alarmen nur die Warnung, Abstand zu halten.",
+            es: "Quien envió el mensaje marcó el puente como abierto. Entre las alarmas oyó quien escuchaba solo la advertencia de mantenerse lejos.",
+        ),
+        practice: (
+            en: "When a message is misunderstood, ask what the channel and the listener's situation filtered out.",
+            de: "Wenn eine Nachricht missverstanden wird, frag, was der Kanal und die Situation der zuhörenden Person ausgeblendet haben.",
+            es: "Si se malinterpreta un mensaje, pregunta qué filtraron el canal y la situación de quien escuchaba.",
+        ),
+    ),
+)

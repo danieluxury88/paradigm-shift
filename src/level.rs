@@ -22,6 +22,38 @@ const LEVEL_FILES: &[(&str, &str)] = &[
     ),
     ("03-straw-men", include_str!("../levels/03-straw-men.ron")),
     ("04-either-or", include_str!("../levels/04-either-or.ron")),
+    (
+        "05-the-unfitting-star",
+        include_str!("../levels/05-the-unfitting-star.ron"),
+    ),
+    (
+        "06-the-shared-crossing",
+        include_str!("../levels/06-the-shared-crossing.ron"),
+    ),
+    (
+        "07-signal-and-noise",
+        include_str!("../levels/07-signal-and-noise.ron"),
+    ),
+    (
+        "08-the-silent-reply",
+        include_str!("../levels/08-the-silent-reply.ron"),
+    ),
+    (
+        "09-a-fair-reading",
+        include_str!("../levels/09-a-fair-reading.ron"),
+    ),
+    (
+        "10-the-borrowed-answer",
+        include_str!("../levels/10-the-borrowed-answer.ron"),
+    ),
+    (
+        "11-the-unassigned-seat",
+        include_str!("../levels/11-the-unassigned-seat.ron"),
+    ),
+    (
+        "12-the-nearby-need",
+        include_str!("../levels/12-the-nearby-need.ron"),
+    ),
 ];
 
 /// The concept a level teaches, shown on a card once the level is solved.
@@ -37,6 +69,7 @@ pub struct ConceptCard {
 /// One level exactly as written in its `.ron` file.
 #[derive(Debug, Clone, Deserialize)]
 pub struct LevelData {
+    pub world: Tr,
     pub title: Tr,
     pub hint: Tr,
     pub lenses: (Tr, Tr),
@@ -54,9 +87,10 @@ impl LevelData {
 
     /// Every translatable text of the level, for the completeness test.
     #[cfg(test)]
-    fn texts(&self) -> [&Tr; 9] {
+    fn texts(&self) -> [&Tr; 10] {
         let c = &self.card;
         [
+            &self.world,
             &self.title,
             &self.hint,
             &self.lenses.0,

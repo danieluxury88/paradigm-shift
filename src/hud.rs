@@ -65,6 +65,14 @@ fn spawn_hud(
                 },
                 children![
                     (
+                        Text::new(level.world.get(lang)),
+                        TextFont {
+                            font: fonts.bold.clone().into(),
+                            ..size(15.0)
+                        },
+                        TextColor(Color::srgb(0.65, 0.70, 0.70)),
+                    ),
+                    (
                         Text::new(format!(
                             "{} · {}",
                             levels.current + 1,

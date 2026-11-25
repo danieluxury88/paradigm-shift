@@ -1,0 +1,71 @@
+// World 1: the traveler finds evidence that neither current map can explain.
+(
+    world: (
+        en: "The First Crossing",
+        de: "Der erste Übergang",
+        es: "El primer cruce",
+    ),
+    title: (
+        en: "The unfitting star",
+        de: "Der unpassende Stern",
+        es: "La estrella que no encaja",
+    ),
+    hint: (
+        en: "The two maps disagree about the route. One small mark disagrees with both.",
+        de: "Die beiden Karten widersprechen sich über den Weg. Eine kleine Markierung widerspricht beiden.",
+        es: "Los dos mapas discrepan sobre la ruta. Una pequeña marca contradice a ambos.",
+    ),
+    lenses: (
+        (
+            en: "The old map",
+            de: "Die alte Karte",
+            es: "El mapa antiguo",
+        ),
+        (
+            en: "The new map",
+            de: "Die neue Karte",
+            es: "El mapa nuevo",
+        ),
+    ),
+    map: [
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "................AA............",
+        ".............BB....BB.........",
+        "..........AA..........AA......",
+        ".P.....BB..................G..",
+        "######..................######",
+    ],
+    card: (
+        term: (
+            en: "Anomaly",
+            de: "Anomalie",
+            es: "Anomalía",
+        ),
+        origin: (
+            en: "Thomas Kuhn, The Structure of Scientific Revolutions (1962)",
+            de: "Thomas Kuhn, Die Struktur wissenschaftlicher Revolutionen (1962)",
+            es: "Thomas Kuhn, La estructura de las revoluciones científicas (1962)",
+        ),
+        definition: (
+            en: "An observation that does not fit the expectations of a shared framework. It may be ignored, explained away or become a reason to revise the framework.",
+            de: "Eine Beobachtung, die nicht zu den Erwartungen eines gemeinsamen Denkrahmens passt. Sie kann ignoriert, weg erklärt oder zum Anlass genommen werden, den Denkrahmen zu überarbeiten.",
+            es: "Una observación que no encaja con las expectativas de un marco compartido. Puede ignorarse, explicarse de forma forzada o llevar a revisar el marco.",
+        ),
+        example: (
+            en: "The traveler finds a mark that appears on neither map, yet it points toward the crossing both maps miss.",
+            de: "Die reisende Person findet eine Markierung, die auf keiner Karte steht und doch zu dem Übergang führt, den beide Karten übersehen.",
+            es: "La persona viajera encuentra una marca que no aparece en ningún mapa y que señala el cruce que ambos mapas omiten.",
+        ),
+        practice: (
+            en: "When a detail refuses to fit, keep it visible long enough to ask what your map leaves out.",
+            de: "Wenn ein Detail nicht passt, lass es sichtbar und frag, was deine Karte ausblendet.",
+            es: "Cuando un detalle no encaje, mantenlo a la vista y pregúntate qué deja fuera tu mapa.",
+        ),
+    ),
+)

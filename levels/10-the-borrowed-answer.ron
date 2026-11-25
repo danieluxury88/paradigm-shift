@@ -1,0 +1,71 @@
+// World 3: the traveler weighs expert testimony without surrendering judgment.
+(
+    world: (
+        en: "The Common Ground",
+        de: "Der gemeinsame Grund",
+        es: "El terreno común",
+    ),
+    title: (
+        en: "The borrowed answer",
+        de: "Die geliehene Antwort",
+        es: "La respuesta prestada",
+    ),
+    hint: (
+        en: "The surveyor knows the stones. The residents know where the river rises. Whose map is complete?",
+        de: "Die Vermessung kennt die Steine. Die Bewohner kennen den steigenden Fluss. Wessen Karte ist vollständig?",
+        es: "La topógrafa conoce las piedras. Los vecinos conocen la crecida del río. ¿Qué mapa está completo?",
+    ),
+    lenses: (
+        (
+            en: "The expert's map",
+            de: "Die Karte der Fachperson",
+            es: "El mapa de la experta",
+        ),
+        (
+            en: "The residents' account",
+            de: "Der Bericht der Bewohner",
+            es: "El relato de los vecinos",
+        ),
+    ),
+    map: [
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "...............A...........G..",
+        "...............A.......######.",
+        "...............A..............",
+        "...............A...BB.........",
+        ".P.............A..............",
+        "####AAAAAAAA##################",
+    ],
+    card: (
+        term: (
+            en: "Appeal to authority",
+            de: "Autoritätsargument",
+            es: "Apelación a la autoridad",
+        ),
+        origin: (
+            en: "A traditional informal fallacy, discussed since Aristotle's Sophistical Refutations",
+            de: "Ein traditioneller informeller Fehlschluss, behandelt seit Aristoteles' Sophistischen Widerlegungen",
+            es: "Una falacia informal tradicional, discutida desde las Refutaciones sofísticas de Aristóteles",
+        ),
+        definition: (
+            en: "A claim is not settled merely because an authority said it. Expertise is relevant evidence, but its limits, methods and context matter.",
+            de: "Eine Aussage ist nicht allein deshalb entschieden, weil eine Autorität sie vertritt. Fachwissen ist ein wichtiger Hinweis, doch Grenzen, Methoden und Kontext zählen ebenfalls.",
+            es: "Una afirmación no queda resuelta solo porque la diga una autoridad. La experiencia experta aporta evidencia, pero también importan sus límites, métodos y contexto.",
+        ),
+        example: (
+            en: "The surveyor measured the old bridge accurately, but only the residents knew which stones shifted during the seasonal flood.",
+            de: "Die Fachperson vermass die alte Brücke genau, doch nur die Bewohner wussten, welche Steine sich bei der saisonalen Flut verschoben.",
+            es: "La experta midió con precisión el puente antiguo, pero solo los vecinos sabían qué piedras se movían durante la crecida estacional.",
+        ),
+        practice: (
+            en: "Respect expertise and ask what evidence, scope and local knowledge support the claim.",
+            de: "Respektiere Fachwissen und frag nach Belegen, Geltungsbereich und lokalem Wissen.",
+            es: "Respeta la experiencia y pregunta qué evidencia, alcance y conocimiento local sostienen la afirmación.",
+        ),
+    ),
+)

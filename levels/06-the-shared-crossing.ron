@@ -1,0 +1,71 @@
+// World 1 finale: the traveler carries forward what each perspective made visible.
+(
+    world: (
+        en: "The First Crossing",
+        de: "Der erste Übergang",
+        es: "El primer cruce",
+    ),
+    title: (
+        en: "The shared crossing",
+        de: "Der gemeinsame Übergang",
+        es: "El cruce compartido",
+    ),
+    hint: (
+        en: "Neither map is enough. Use what each one taught you, without erasing their differences.",
+        de: "Keine Karte genügt. Nutze, was jede dich gelehrt hat, ohne ihre Unterschiede auszulöschen.",
+        es: "Ningún mapa basta. Usa lo que aprendiste de cada uno sin borrar sus diferencias.",
+    ),
+    lenses: (
+        (
+            en: "What I was told",
+            de: "Was mir erzählt wurde",
+            es: "Lo que me contaron",
+        ),
+        (
+            en: "What I found",
+            de: "Was ich gefunden habe",
+            es: "Lo que encontré",
+        ),
+    ),
+    map: [
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "..............................",
+        "............BB................",
+        ".........AA....AA.............",
+        "......BB..........BB..........",
+        "..P..................AA.....G.",
+        "######..................######",
+    ],
+    card: (
+        term: (
+            en: "Synthesis",
+            de: "Synthese",
+            es: "Síntesis",
+        ),
+        origin: (
+            en: "Dialectical thinking, especially associated with G. W. F. Hegel",
+            de: "Dialektisches Denken, besonders mit G. W. F. Hegel verbunden",
+            es: "Pensamiento dialéctico, asociado especialmente con G. W. F. Hegel",
+        ),
+        definition: (
+            en: "A new understanding formed by working through tensions between views. It can preserve differences instead of forcing them into one answer.",
+            de: "Ein neues Verständnis, das aus der Auseinandersetzung mit Spannungen zwischen Sichtweisen entsteht. Es kann Unterschiede bewahren, statt sie in eine einzige Antwort zu zwingen.",
+            es: "Una comprensión nueva que surge al trabajar las tensiones entre perspectivas. Puede conservar las diferencias sin forzarlas a una sola respuesta.",
+        ),
+        example: (
+            en: "The old map knew where the residents gathered; the new one showed a safe route. The traveler needed both to find the crossing.",
+            de: "Die alte Karte zeigte, wo sich die Bewohner trafen; die neue zeigte einen sicheren Weg. Für den Übergang brauchte die reisende Person beide.",
+            es: "El mapa antiguo mostraba dónde se reunían los habitantes; el nuevo, una ruta segura. Para encontrar el cruce, la persona viajera necesitó ambos.",
+        ),
+        practice: (
+            en: "After hearing two views, ask what a next step could preserve from each.",
+            de: "Frag nach zwei Sichtweisen, welcher nächste Schritt etwas von beiden bewahren könnte.",
+            es: "Después de escuchar dos perspectivas, pregunta qué siguiente paso podría conservar algo de cada una.",
+        ),
+    ),
+)

@@ -1,0 +1,71 @@
+// World 2 finale: the traveler tries to carry a neighbor's meaning across the city.
+(
+    world: (
+        en: "The Listening City",
+        de: "Die Stadt, die zuhört",
+        es: "La ciudad que escucha",
+    ),
+    title: (
+        en: "A fair reading",
+        de: "Eine faire Lesart",
+        es: "Una interpretación justa",
+    ),
+    hint: (
+        en: "Before repeating the bridge keeper's words, find a version they would recognize as fair.",
+        de: "Bevor du die Worte der Brückenwache weitergibst, finde eine Fassung, die sie als fair erkennen würde.",
+        es: "Antes de repetir las palabras de quien cuida el puente, busca una versión que esa persona considere justa.",
+    ),
+    lenses: (
+        (
+            en: "The quick reply",
+            de: "Die schnelle Antwort",
+            es: "La respuesta rápida",
+        ),
+        (
+            en: "The charitable reading",
+            de: "Die wohlwollende Lesart",
+            es: "La interpretación caritativa",
+        ),
+    ),
+    map: [
+        "......................#.......",
+        "......................#.......",
+        "......................#.......",
+        "...............AAAAAAA#.......",
+        "......................#.......",
+        "...........AA.........#.......",
+        "..............................",
+        "........AA.................G..",
+        "...................BBB########",
+        ".....AA.........BB....#.......",
+        ".P....................#.......",
+        "##################....########",
+    ],
+    card: (
+        term: (
+            en: "Principle of charity",
+            de: "Prinzip des Wohlwollens",
+            es: "Principio de caridad interpretativa",
+        ),
+        origin: (
+            en: "Neil L. Wilson, Substances without Substrata (1959); developed in later philosophy of language",
+            de: "Neil L. Wilson, Substances without Substrata (1959); später in der Sprachphilosophie weiterentwickelt",
+            es: "Neil L. Wilson, Substances without Substrata (1959); desarrollado después en la filosofía del lenguaje",
+        ),
+        definition: (
+            en: "When interpreting an unclear claim, prefer a reasonable reading that makes it coherent, rather than a weak version that is easy to dismiss.",
+            de: "Deute eine unklare Aussage möglichst sinnvoll und zusammenhängend, statt eine schwache Version zu wählen, die sich leicht abweisen lässt.",
+            es: "Al interpretar una afirmación ambigua, prefiere una lectura razonable y coherente a una versión débil que sea fácil de descartar.",
+        ),
+        example: (
+            en: "The keeper says, 'We cannot open the bridge for everyone.' The traveler first asks whether the keeper means 'not safely yet' rather than 'never'.",
+            de: "Die Brückenwache sagt: „Wir können die Brücke nicht für alle öffnen.“ Die reisende Person fragt erst, ob damit „noch nicht sicher“ statt „niemals“ gemeint ist.",
+            es: "Quien cuida el puente dice: «No podemos abrirlo para todo el mundo». La persona viajera pregunta si significa «todavía no es seguro» en vez de «nunca».",
+        ),
+        practice: (
+            en: "Restate a difficult claim in a form its speaker could accept before you challenge it.",
+            de: "Formuliere eine schwierige Aussage so um, dass die sprechende Person sie anerkennen könnte, bevor du widersprichst.",
+            es: "Reformula una afirmación difícil de modo que quien la dijo pueda reconocerla antes de cuestionarla.",
+        ),
+    ),
+)
