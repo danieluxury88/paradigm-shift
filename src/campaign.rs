@@ -27,6 +27,8 @@ pub enum Feature {
     Lives,
     /// A clock for each level, with best times kept in the save.
     Timer,
+    /// Each world's music, in two versions that SHIFT crossfades.
+    Music,
 }
 
 /// What running out of lives costs, per world: the challenge grows.

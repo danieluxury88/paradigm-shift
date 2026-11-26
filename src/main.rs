@@ -1,6 +1,7 @@
 //! Paradigm Shift: a puzzle platformer about seeing the same world through
 //! different paradigms. Entry point: builds the Bevy app and wires the plugins.
 
+mod audio;
 #[cfg(feature = "brp")]
 mod brp;
 mod campaign;
@@ -18,6 +19,7 @@ mod sim_tests;
 #[cfg(test)]
 mod solver;
 mod straw;
+mod synth;
 mod timer;
 mod title;
 
@@ -68,6 +70,7 @@ fn main() {
         lives::LivesPlugin,
         prompt::PromptPlugin,
         timer::TimerPlugin,
+        audio::AudioPlugin,
         card::CardPlugin,
         straw::StrawPlugin,
     ))

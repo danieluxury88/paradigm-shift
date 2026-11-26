@@ -39,6 +39,7 @@ Current schedule:
 
 | Level | Unlocks | Notes |
 |---|---|---|
+| 2 | Music | One loop per world, synthesized in two versions with the same bass and chords (the second an octave up, another timbre, off the beat). Both play in sync and SHIFT crossfades between them: the mechanic is heard as well as seen. Effects play from level 1. |
 | 4 | Lives | Per-world budget (5, 4, 3 in the three worlds). Out of lives: restart the level in world 1, back to the world's first level in worlds 2 and 3 (`out_of_lives` in the manifest). Every respawn, fall or R, costs a life. |
 | 5 | Asks the player's name (`ask: Name`) | Fills `{name}` in level texts from then on: the traveler becomes the player. Shown in the HUD's traveler slot. |
 | 7 | Timer | A clock per level, shown in the HUD's timer slot; respawns do not stop it. Only reaching the goal (`LevelCompleted`) records a run, so the development skip key never sets a record. Best times are kept per level id in `Progress::best_times` and shown on the concept card through its `CardSlot`. |
@@ -106,5 +107,5 @@ Submission closes 2026-12-01 13:37 PST. The jam's opening-world target remains s
 ## Open questions
 
 - Art direction: flat shapes and colour for the current prototype. For the larger game, each world should have a visual identity, and perspectives should change details, composition and meaning as well as colour.
-- Sound: Bevy's `audio` feature is off to keep the web build small; add it only if there is time.
+- Sound: synthesized for now (`src/synth.rs`), behind `build_bank` in `src/audio.rs` so recorded audio can replace it without touching the rest of the game. The music's two lens versions are an idea worth keeping when real tracks arrive.
 - Languages: English, German and Spanish are built in (L switches). The German and Spanish texts need a native review before the submission.

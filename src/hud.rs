@@ -158,9 +158,10 @@ fn spawn_hud(mut commands: Commands, current: Current, language: Res<Language>, 
                     ),
                     (
                         Text::new(format!(
-                            "[L] {} · {}",
+                            "[L] {} · {}   [M] {}",
                             ui(lang, Ui::LanguageKey),
-                            lang.code()
+                            lang.code(),
+                            ui(lang, Ui::Sound)
                         )),
                         size(15.0),
                         TextColor(Color::srgb(0.55, 0.57, 0.55)),

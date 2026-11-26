@@ -51,12 +51,17 @@ pub struct ActiveLens(pub Lens);
 #[derive(Message)]
 pub struct ShiftBlocked;
 
+/// Sent when SHIFT changed the lens (not when a level resets it).
+#[derive(Message)]
+pub struct Shifted;
+
 pub struct LensPlugin;
 
 impl Plugin for LensPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<ActiveLens>()
             .add_message::<ShiftBlocked>()
+            .add_message::<Shifted>()
             .add_systems(OnEnter(AppState::Playing), reset_lens)
             .add_systems(
                 Update,
@@ -80,6 +85,7 @@ fn switch_lens(
     mut lens: ResMut<ActiveLens>,
     player: Query<&Transform, With<Player>>,
     mut blocked: MessageWriter<ShiftBlocked>,
+    mut shifted: MessageWriter<Shifted>,
 ) {
     if !(keys.just_pressed(KeyCode::ShiftLeft) || keys.just_pressed(KeyCode::ShiftRight)) {
         return;
@@ -88,7 +94,10 @@ fn switch_lens(
         return;
     };
     match try_shift(&grid, transform.translation.truncate(), lens.0) {
-        Some(next) => lens.0 = next,
+        Some(next) => {
+            lens.0 = next;
+            shifted.write(Shifted);
+        }
         None => {
             blocked.write(ShiftBlocked);
         }

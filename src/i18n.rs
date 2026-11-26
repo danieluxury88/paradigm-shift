@@ -100,6 +100,7 @@ pub enum Ui {
     Time,
     Best,
     NewRecord,
+    Sound,
 }
 
 pub fn ui(language: Language, key: Ui) -> &'static str {
@@ -186,6 +187,9 @@ pub fn ui(language: Language, key: Ui) -> &'static str {
         (Ui::NewRecord, En) => "new record!",
         (Ui::NewRecord, De) => "neuer Rekord!",
         (Ui::NewRecord, Es) => "¡nuevo récord!",
+        (Ui::Sound, En) => "sound",
+        (Ui::Sound, De) => "Ton",
+        (Ui::Sound, Es) => "sonido",
     }
 }
 

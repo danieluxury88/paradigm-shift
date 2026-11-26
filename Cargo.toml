@@ -7,7 +7,9 @@ license = "MIT"
 
 [dependencies]
 # Only the 2D and UI profiles: no 3D renderer, which keeps builds and the web bundle smaller.
-bevy = { version = "0.20.1", default-features = false, features = ["2d", "ui"] }
+# Audio with WAV only: the game synthesizes its sounds (src/synth.rs), so no compressed
+# format decoder is needed. Add "vorbis" here when recorded .ogg files replace them.
+bevy = { version = "0.20.1", default-features = false, features = ["2d", "ui", "bevy_audio", "wav"] }
 ron = "0.12.3"
 serde = { version = "1.0.229", features = ["derive"] }
 # Remote control for coding agents (BRP), only with the `brp` feature. No gamepad support needed.

@@ -21,6 +21,16 @@ struct SaveFile {
     version: u32,
     progress: Progress,
     language: Language,
+    #[serde(default)]
+    settings: Settings,
+}
+
+/// Player preferences, saved with the progress.
+#[derive(Resource, Debug, Default, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Settings {
+    /// M toggles all sound off and on.
+    #[serde(default)]
+    pub muted: bool,
 }
 
 /// Where the save text lives.
@@ -136,19 +146,20 @@ mod platform {
 
 /// Reads a save; `None` if it is missing, from another version or invalid
 /// for this campaign.
-fn parse(text: &str, campaign: &Campaign) -> Option<(Progress, Language)> {
+fn parse(text: &str, campaign: &Campaign) -> Option<(Progress, Language, Settings)> {
     let file: SaveFile = ron::from_str(text).ok()?;
     if file.version != VERSION || file.progress.level >= campaign.levels.len() {
         return None;
     }
-    Some((file.progress, file.language))
+    Some((file.progress, file.language, file.settings))
 }
 
-fn serialize(progress: &Progress, language: Language) -> String {
+fn serialize(progress: &Progress, language: Language, settings: Settings) -> String {
     let file = SaveFile {
         version: VERSION,
         progress: progress.clone(),
         language,
+        settings,
     };
     ron::ser::to_string_pretty(&file, ron::ser::PrettyConfig::default())
         .expect("plain data always serializes")
@@ -174,18 +185,30 @@ impl Plugin for SavePlugin {
             .load()
             .and_then(|text| parse(&text, world.resource::<Campaign>()));
         app.insert_resource(SaveFound(loaded.is_some()));
-        if let Some((progress, language)) = loaded {
-            app.insert_resource(progress).insert_resource(language);
+        match loaded {
+            Some((progress, language, settings)) => {
+                app.insert_resource(progress)
+                    .insert_resource(language)
+                    .insert_resource(settings);
+            }
+            None => {
+                app.init_resource::<Settings>();
+            }
         }
         app.add_systems(Last, write_on_change);
     }
 }
 
-fn write_on_change(store: Res<SaveStore>, progress: Res<Progress>, language: Res<Language>) {
-    let changed = progress.is_changed() || language.is_changed();
-    let first_frame = progress.is_added() && language.is_added();
+fn write_on_change(
+    store: Res<SaveStore>,
+    progress: Res<Progress>,
+    language: Res<Language>,
+    settings: Res<Settings>,
+) {
+    let changed = progress.is_changed() || language.is_changed() || settings.is_changed();
+    let first_frame = progress.is_added() && language.is_added() && settings.is_added();
     if changed && !first_frame {
-        store.0.save(&serialize(&progress, *language));
+        store.0.save(&serialize(&progress, *language, *settings));
     }
 }
 
@@ -200,20 +223,31 @@ mod tests {
             level: 4,
             ..default()
         };
-        let text = serialize(&progress, Language::Es);
-        assert_eq!(parse(&text, &campaign), Some((progress, Language::Es)));
+        let settings = Settings { muted: true };
+        let text = serialize(&progress, Language::Es, settings);
+        assert_eq!(
+            parse(&text, &campaign),
+            Some((progress, Language::Es, settings))
+        );
     }
 
     #[test]
     fn ignores_broken_old_or_out_of_range_saves() {
         let campaign = Campaign::load();
         assert_eq!(parse("not ron", &campaign), None);
-        let old = serialize(&Progress::default(), Language::En).replace("version: 1", "version: 0");
+        let old = serialize(&Progress::default(), Language::En, Settings::default())
+            .replace("version: 1", "version: 0");
         assert_eq!(parse(&old, &campaign), None);
         let beyond = Progress {
             level: campaign.levels.len(),
             ..default()
         };
-        assert_eq!(parse(&serialize(&beyond, Language::En), &campaign), None);
+        assert_eq!(
+            parse(
+                &serialize(&beyond, Language::En, Settings::default()),
+                &campaign
+            ),
+            None
+        );
     }
 }

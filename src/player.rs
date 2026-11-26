@@ -37,6 +37,10 @@ pub struct MoveInput {
 #[derive(Message)]
 pub struct Respawned;
 
+/// Sent when the player leaves the ground with a jump.
+#[derive(Message)]
+pub struct Jumped;
+
 /// Sent when the player touches the goal: the level was really solved (the
 /// development skip key does not send it).
 #[derive(Message)]
@@ -53,6 +57,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_message::<Respawned>()
             .add_message::<LevelCompleted>()
+            .add_message::<Jumped>()
             .add_systems(
                 OnEnter(AppState::Playing),
                 spawn_player.after(crate::level::spawn_level),
@@ -82,6 +87,7 @@ pub fn move_player(
     grid: Res<LevelGrid>,
     lens: Res<ActiveLens>,
     mut query: Query<(&mut Player, &mut Transform)>,
+    mut jumped: MessageWriter<Jumped>,
 ) {
     let Ok((mut player, mut transform)) = query.single_mut() else {
         return;
@@ -96,6 +102,9 @@ pub fn move_player(
         },
         jump: keys.any_just_pressed([KeyCode::Space, KeyCode::ArrowUp, KeyCode::KeyW]),
     };
+    if input.jump && player.on_ground {
+        jumped.write(Jumped);
+    }
     let mut position = transform.translation.truncate();
     step(
         &mut position,
