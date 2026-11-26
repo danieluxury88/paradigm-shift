@@ -41,6 +41,9 @@ impl Lens {
     }
 }
 
+/// Colour of a platform reinforced by the Steelman, in every lens.
+pub const STEEL: Color = Color::srgb(0.55, 0.70, 0.95);
+
 /// The lens currently in use. A resource: one value shared by the whole game.
 #[derive(Resource, Debug, Default, Reflect)]
 #[reflect(Resource)]
@@ -125,6 +128,7 @@ fn paint_tiles(
     for (tile, mut sprite) in &mut tiles {
         sprite.color = match tile.0 {
             Cell::Solid => Color::srgb(0.80, 0.80, 0.78),
+            Cell::Steel => STEEL,
             Cell::Goal => Color::srgb(0.95, 0.85, 0.30),
             // Straw passes for real ground in the first lens; the second
             // lens shows it for what it is.

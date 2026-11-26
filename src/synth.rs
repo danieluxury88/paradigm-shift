@@ -110,15 +110,17 @@ pub enum Effect {
     Blocked,
     Fall,
     Goal,
+    Reinforce,
 }
 
 impl Effect {
-    pub const ALL: [Effect; 5] = [
+    pub const ALL: [Effect; 6] = [
         Effect::Jump,
         Effect::Shift,
         Effect::Blocked,
         Effect::Fall,
         Effect::Goal,
+        Effect::Reinforce,
     ];
 }
 
@@ -141,6 +143,10 @@ pub fn effect(effect: Effect) -> Vec<f32> {
         ],
         Effect::Blocked => vec![note(140.0, 110.0, 0.0, 0.16, Wave::Square, 8.0)],
         Effect::Fall => vec![note(600.0, 120.0, 0.0, 0.4, Wave::Triangle, 4.0)],
+        Effect::Reinforce => vec![
+            note(220.0, 440.0, 0.0, 0.25, Wave::Square, 6.0),
+            note(880.0, 880.0, 0.05, 0.35, Wave::Sine, 5.0),
+        ],
         Effect::Goal => [72, 76, 79, 84]
             .iter()
             .enumerate()

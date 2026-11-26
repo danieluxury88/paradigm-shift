@@ -6,6 +6,7 @@ mod audio;
 mod brp;
 mod campaign;
 mod card;
+mod gadgets;
 mod hud;
 mod i18n;
 mod journal;
@@ -59,6 +60,7 @@ fn main() {
         ..default()
     }))
     .init_state::<AppState>()
+    // The core loop: content, saving, screens, the level and its mechanics.
     .add_plugins((
         // First: it replaces the default font that the other plugins' texts use.
         i18n::I18nPlugin,
@@ -69,14 +71,19 @@ fn main() {
         level::LevelPlugin,
         lens::LensPlugin,
         player::PlayerPlugin,
+        straw::StrawPlugin,
         hud::HudPlugin,
-        lives::LivesPlugin,
+        card::CardPlugin,
         prompt::PromptPlugin,
-        timer::TimerPlugin,
+    ))
+    // Features the campaign unlocks level by level (`unlocks:` in
+    // levels/worlds.ron); each fills its own HUD or card slot.
+    .add_plugins((
         audio::AudioPlugin,
         journal::JournalPlugin,
-        card::CardPlugin,
-        straw::StrawPlugin,
+        lives::LivesPlugin,
+        timer::TimerPlugin,
+        gadgets::GadgetsPlugin,
     ))
     .add_systems(Startup, spawn_camera);
 

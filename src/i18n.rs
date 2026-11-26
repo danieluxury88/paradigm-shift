@@ -104,6 +104,7 @@ pub enum Ui {
     Journal,
     Concepts,
     Back,
+    Steelman,
 }
 
 pub fn ui(language: Language, key: Ui) -> &'static str {
@@ -202,6 +203,9 @@ pub fn ui(language: Language, key: Ui) -> &'static str {
         (Ui::Back, En) => "back",
         (Ui::Back, De) => "zurück",
         (Ui::Back, Es) => "volver",
+        (Ui::Steelman, En) => "Steelman",
+        (Ui::Steelman, De) => "Steelman",
+        (Ui::Steelman, Es) => "Hombre de acero",
     }
 }
 

@@ -40,7 +40,7 @@
             levels: [
                 (file: "07-signal-and-noise", unlocks: [Timer]),
                 (file: "08-the-silent-reply"),
-                (file: "09-a-fair-reading"),
+                (file: "09-a-fair-reading", unlocks: [Steelman]),
             ],
         ),
         (

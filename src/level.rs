@@ -66,6 +66,10 @@ pub enum Cell {
     /// Looks like solid ground but the whole straw structure collapses
     /// shortly after the player stands on it (see `straw.rs`).
     Straw,
+    /// A platform of the other lens, reinforced by the Steelman gadget:
+    /// solid in every lens until the player respawns (see `gadgets.rs`).
+    /// Never written in a map file.
+    Steel,
     Start,
     Goal,
 }
@@ -86,7 +90,7 @@ impl Cell {
 
     pub fn is_solid_in(self, lens: Lens) -> bool {
         match self {
-            Cell::Solid | Cell::Straw => true,
+            Cell::Solid | Cell::Straw | Cell::Steel => true,
             Cell::LensOnly(owner) => owner == lens,
             _ => false,
         }

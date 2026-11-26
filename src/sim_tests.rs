@@ -54,6 +54,7 @@ fn game_with_store(level: usize, store: Box<dyn crate::save::Store>) -> App {
             crate::prompt::PromptPlugin,
             crate::timer::TimerPlugin,
             crate::journal::JournalPlugin,
+            crate::gadgets::GadgetsPlugin,
         ));
     app.world_mut().resource_mut::<Progress>().level = level;
     app.world_mut()
@@ -473,4 +474,59 @@ fn solved_levels_go_into_the_journal_which_j_opens_from_the_card() {
     tap(&mut app, KeyCode::Escape);
     run(&mut app, 1);
     assert_eq!(state(&app), AppState::Card, "ESC returns to the card");
+}
+
+#[test]
+fn the_steelman_reinforces_the_other_lens_platform_once_per_level() {
+    use crate::gadgets::Charges;
+    let cell =
+        |app: &App, col: usize, row: usize| app.world().resource::<LevelGrid>().cells[row][col];
+
+    // Level 8 has no gadget yet.
+    let mut app = game(7);
+    tap(&mut app, KeyCode::KeyE);
+    assert_eq!(
+        app.world().resource::<Charges>().0,
+        0,
+        "locked before level 9"
+    );
+
+    // Level 9: walk under the "B" platform at row 9, columns 16-17.
+    let mut app = game(8);
+    run(&mut app, 30);
+    hold(&mut app, KeyCode::ArrowRight);
+    while player_position(&mut app).x < 16.0 {
+        run(&mut app, 1);
+    }
+    release(&mut app, KeyCode::ArrowRight);
+    assert_eq!(cell(&app, 16, 9), Cell::LensOnly(crate::lens::Lens::Second));
+
+    tap(&mut app, KeyCode::KeyE);
+    run(&mut app, 1);
+    assert_eq!(cell(&app, 16, 9), Cell::Steel);
+    assert_eq!(cell(&app, 17, 9), Cell::Steel, "the whole platform");
+    let painted = app
+        .world_mut()
+        .query::<(&crate::level::GridPos, &Sprite)>()
+        .iter(app.world())
+        .find(|(pos, _)| pos.0 == 16 && pos.1 == 9)
+        .map(|(_, sprite)| sprite.color);
+    assert_eq!(painted, Some(crate::lens::STEEL), "the steel is visible");
+    assert_eq!(app.world().resource::<Charges>().0, 0);
+
+    tap(&mut app, KeyCode::KeyE);
+    assert_eq!(
+        cell(&app, 19, 8),
+        Cell::LensOnly(crate::lens::Lens::Second),
+        "no charge left for a second platform"
+    );
+
+    tap(&mut app, KeyCode::KeyR);
+    run(&mut app, 1);
+    assert_eq!(cell(&app, 16, 9), Cell::LensOnly(crate::lens::Lens::Second));
+    assert_eq!(
+        app.world().resource::<Charges>().0,
+        1,
+        "a respawn resets the level"
+    );
 }

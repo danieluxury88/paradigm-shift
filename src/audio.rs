@@ -20,6 +20,7 @@ use bevy::prelude::*;
 
 use crate::AppState;
 use crate::campaign::{Current, Feature, unlocked};
+use crate::gadgets::{ReinforceFailed, Reinforced};
 use crate::lens::{ActiveLens, Lens, ShiftBlocked, Shifted};
 use crate::player::{Jumped, LevelCompleted, Respawned};
 use crate::save::Settings;
@@ -92,6 +93,8 @@ struct SoundCues<'w, 's> {
     blocked: MessageReader<'w, 's, ShiftBlocked>,
     respawned: MessageReader<'w, 's, Respawned>,
     completed: MessageReader<'w, 's, LevelCompleted>,
+    reinforced: MessageReader<'w, 's, Reinforced>,
+    reinforce_failed: MessageReader<'w, 's, ReinforceFailed>,
 }
 
 impl SoundCues<'_, '_> {
@@ -100,7 +103,11 @@ impl SoundCues<'_, '_> {
         [
             (Effect::Jump, self.jumped.read().count()),
             (Effect::Shift, self.shifted.read().count()),
-            (Effect::Blocked, self.blocked.read().count()),
+            (
+                Effect::Blocked,
+                self.blocked.read().count() + self.reinforce_failed.read().count(),
+            ),
+            (Effect::Reinforce, self.reinforced.read().count()),
             (Effect::Fall, self.respawned.read().count()),
             (Effect::Goal, self.completed.read().count()),
         ]

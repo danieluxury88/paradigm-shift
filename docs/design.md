@@ -44,6 +44,7 @@ Current schedule:
 | 4 | Lives | Per-world budget (5, 4, 3 in the three worlds). Out of lives: restart the level in world 1, back to the world's first level in worlds 2 and 3 (`out_of_lives` in the manifest). Every respawn, fall or R, costs a life. |
 | 5 | Asks the player's name (`ask: Name`) | Fills `{name}` in level texts from then on: the traveler becomes the player. Shown in the HUD's traveler slot. |
 | 7 | Timer | A clock per level, shown in the HUD's timer slot; respawns do not stop it. Only reaching the goal (`LevelCompleted`) records a run, so the development skip key never sets a record. Best times are kept per level id in `Progress::best_times` and shown on the concept card through its `CardSlot`. |
+| 9 | Steelman gadget | E turns the nearest platform of the other lens (within 3 tiles, the whole run) into steel, solid in both lenses; one charge per level, restored with the platform on respawn. Unlocked on the principle-of-charity level, whose idea it puts into play. No map depends on it yet, and the solver never uses it, so every level still needs SHIFT. |
 | 10 | Asks the player's city (`ask: City`) | Fills `{city}`; used in the "Try it" habits of levels 10 and 12, which tie the concept to the player's own surroundings. |
 
 Every screen that leads into a level (card, title, game over) goes through `Progress::level_entry`, which opens the question first when the level asks something the profile does not have yet.
@@ -96,7 +97,8 @@ For every level, keep a small design brief: the question it raises, whose perspe
 | Epistemology | Appeal to authority | Weigh expertise alongside method, scope and local knowledge | Level 10 |
 | Political philosophy | Veil of ignorance (Rawls) | Choose a rule before learning which position in the community will be yours | Level 11 |
 | Ethics | Ethics of care (Gilligan and later care ethicists) | Consider relationships and concrete needs alongside shared rules | Level 12 |
-| Useful tools | Steelmanning and Socratic questions | Unlockable abilities, e.g. "strengthen" a weak platform so it holds | Idea |
+| Useful tools | Steelmanning | Unlockable ability: "strengthen" a platform of the other view so it holds | Gadget from level 9 |
+| Useful tools | Socratic questions | Unlockable ability, e.g. reveal a route no lens shows | Idea |
 | Fallacies | Slippery slope | A literal slope that drags the player to the bottom unless they stop in time | Idea |
 | Fallacies | Ad hominem | A route blocked by attacks on a person's character instead of their reasoning | Idea |
 | Philosophy | Plato's cave | A shadow level where what you see is not what is there | Idea |

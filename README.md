@@ -18,6 +18,7 @@ Last verified: 2026-11-25
 | R | Restart the level (costs a life once lives are unlocked) |
 | L | Change language (English, Deutsch, Español) |
 | M | Sound off / on (remembered) |
+| E | Steelman: reinforce the nearest platform of the other lens so it holds in both (once per level, from level 9) |
 | J | Open the journal of collected concepts, from a concept card or the title screen (once unlocked) |
 | ENTER | Continue after a concept card |
 | N | Skip the level (development builds only) |
@@ -34,6 +35,7 @@ The first levels are only movement and SHIFT. Further on, the game gains layers,
 | 4 | **Lives.** Each world has a budget of lives shared by its levels; falling or pressing R costs one. Running out restarts the level in the first world and sends you back to the world's first level later on. Later worlds have fewer lives. |
 | 5 | **Your name.** The game asks for it; from then on it appears in the HUD and in the stories on the concept cards. |
 | 7 | **The clock.** Each level is timed; falls do not stop it. The concept card shows your time and your best, which is saved. |
+| 9 | **The Steelman.** A gadget, fittingly unlocked on the principle-of-charity level: E reinforces the nearest platform of the other lens so it holds in both lenses. One charge per level; respawning resets it. |
 | 10 | **Your city.** The "Try it" habits on the concept cards point back to it. |
 
 ### Sound

@@ -31,6 +31,9 @@ pub enum Feature {
     Music,
     /// A journal of the concepts collected so far, opened with J.
     Journal,
+    /// The Steelman gadget: E reinforces a platform of the other lens so it
+    /// holds in both, once per level.
+    Steelman,
 }
 
 /// What running out of lives costs, per world: the challenge grows.
