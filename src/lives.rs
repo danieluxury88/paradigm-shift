@@ -181,7 +181,7 @@ fn continue_after_game_over(
         return;
     }
     apply_game_over(&campaign, &mut progress, &mut lives);
-    next.set(AppState::Playing);
+    next.set(progress.level_entry(&campaign));
 }
 
 /// Applies the world's out-of-lives rule and refills the budget.

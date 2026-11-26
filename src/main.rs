@@ -11,6 +11,7 @@ mod lens;
 mod level;
 mod lives;
 mod player;
+mod prompt;
 mod save;
 #[cfg(test)]
 mod sim_tests;
@@ -34,6 +35,8 @@ pub enum AppState {
     Playing,
     Card,
     GameOver,
+    /// A question before a level (the player's name, their city).
+    Prompt,
 }
 
 fn main() {
@@ -62,6 +65,7 @@ fn main() {
         player::PlayerPlugin,
         hud::HudPlugin,
         lives::LivesPlugin,
+        prompt::PromptPlugin,
         card::CardPlugin,
         straw::StrawPlugin,
     ))

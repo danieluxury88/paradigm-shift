@@ -39,6 +39,10 @@ Current schedule:
 | Level | Unlocks | Notes |
 |---|---|---|
 | 4 | Lives | Per-world budget (5, 4, 3 in the three worlds). Out of lives: restart the level in world 1, back to the world's first level in worlds 2 and 3 (`out_of_lives` in the manifest). Every respawn, fall or R, costs a life. |
+| 5 | Asks the player's name (`ask: Name`) | Fills `{name}` in level texts from then on: the traveler becomes the player. Shown in the HUD's traveler slot. |
+| 10 | Asks the player's city (`ask: City`) | Fills `{city}`; used in the "Try it" habits of levels 10 and 12, which tie the concept to the player's own surroundings. |
+
+Every screen that leads into a level (card, title, game over) goes through `Progress::level_entry`, which opens the question first when the level asks something the profile does not have yet.
 
 ## Worlds and levels
 

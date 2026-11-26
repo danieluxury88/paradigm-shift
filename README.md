@@ -28,6 +28,8 @@ The first levels are only movement and SHIFT. Further on, the game gains layers,
 | From level | Feature |
 |---|---|
 | 4 | **Lives.** Each world has a budget of lives shared by its levels; falling or pressing R costs one. Running out restarts the level in the first world and sends you back to the world's first level later on. Later worlds have fewer lives. |
+| 5 | **Your name.** The game asks for it; from then on it appears in the HUD and in the stories on the concept cards. |
+| 10 | **Your city.** The "Try it" habits on the concept cards point back to it. |
 
 ### Saving
 
@@ -73,7 +75,7 @@ make web     # optimized web build zipped in build/ for itch.io
 ## Adding a level
 
 1. Copy a file in `levels/` and edit it. Map legend: `#` solid in every lens, `A` solid only in the first lens, `B` solid only in the second, `S` straw (looks solid, collapses when stood on), `P` start, `G` goal, `.` empty. All rows must have the same width, with exactly one `P` and one `G`.
-2. Write every text in English (`en`), German (`de`) and Spanish (`es`). The world name lives in `levels/worlds.ron`, not in the level file.
+2. Write every text in English (`en`), German (`de`) and Spanish (`es`). The world name lives in `levels/worlds.ron`, not in the level file. Texts may use `{name}` and `{city}` (the player's answers, or a neutral word while unknown); any other `{...}` fails `make test`. A level can ask for one of them first with `ask: Name` or `ask: City` in the manifest.
 3. List it in its world in `levels/worlds.ron`, which sets the play order. Files are embedded by `build.rs`, so no Rust code changes; a file missing from the manifest, or listed twice, fails at startup and in `make test`.
 4. Run `make test`: a broken map, a missing translation or an unsolvable level fails there with the file name and the reason. No scripted solution is needed: `src/solver.rs` searches for a route with the game's own physics and `src/sim_tests.rs` replays it in the headless app. A second test checks that the level cannot be solved without SHIFT; levels 2, 5 and 12 still can and are listed in `KNOWN_SINGLE_LENS` until their maps are redesigned.
 

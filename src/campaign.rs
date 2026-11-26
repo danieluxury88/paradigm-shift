@@ -10,7 +10,8 @@
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::i18n::Tr;
+use crate::AppState;
+use crate::i18n::{Language, Tr, Ui, ui};
 use crate::level::{LevelData, LevelGrid};
 
 // `LEVEL_FILES`: every `levels/*.ron` except the manifest, embedded by build.rs.
@@ -34,6 +35,39 @@ pub enum OutOfLives {
     RestartLevel,
     /// Go back to the world's first level.
     RestartWorld,
+}
+
+/// Something a level asks the player before it starts, kept in the profile
+/// and usable in level texts as `{name}` or `{city}`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
+pub enum ProfileField {
+    Name,
+    City,
+}
+
+/// What the player has told the game about themselves.
+#[derive(Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
+pub struct Profile {
+    #[serde(default)]
+    pub name: Option<String>,
+    #[serde(default)]
+    pub city: Option<String>,
+}
+
+impl Profile {
+    pub fn get(&self, field: ProfileField) -> Option<&str> {
+        match field {
+            ProfileField::Name => self.name.as_deref(),
+            ProfileField::City => self.city.as_deref(),
+        }
+    }
+
+    pub fn set(&mut self, field: ProfileField, value: String) {
+        match field {
+            ProfileField::Name => self.name = Some(value),
+            ProfileField::City => self.city = Some(value),
+        }
+    }
 }
 
 fn default_lives() -> u32 {
@@ -60,6 +94,8 @@ struct LevelEntry {
     file: String,
     #[serde(default)]
     unlocks: Vec<Feature>,
+    #[serde(default)]
+    ask: Option<ProfileField>,
 }
 
 /// A world: a setting with its own question, holding consecutive levels.
@@ -81,6 +117,8 @@ pub struct Level {
     /// Index into `Campaign::worlds`.
     pub world: usize,
     pub unlocks: Vec<Feature>,
+    /// Asked before the level starts, unless the profile already has it.
+    pub ask: Option<ProfileField>,
     pub data: LevelData,
 }
 
@@ -125,6 +163,7 @@ impl Campaign {
                     id: level.file,
                     world: world_index,
                     unlocks: level.unlocks,
+                    ask: level.ask,
                     data,
                 });
             }
@@ -166,6 +205,8 @@ impl Campaign {
 pub struct Progress {
     /// Index into `Campaign::levels` of the level being played.
     pub level: usize,
+    #[serde(default)]
+    pub profile: Profile,
 }
 
 impl Progress {
@@ -176,6 +217,24 @@ impl Progress {
 
     pub fn is_last(&self, campaign: &Campaign) -> bool {
         self.level + 1 == campaign.levels.len()
+    }
+
+    /// The question the current level still needs answered, if any.
+    pub fn pending_question(&self, campaign: &Campaign) -> Option<ProfileField> {
+        campaign.levels[self.level]
+            .ask
+            .filter(|&field| self.profile.get(field).is_none())
+    }
+
+    /// The screen that starts the current level: its question first if the
+    /// profile lacks the answer, otherwise the level itself. Every screen
+    /// that leads into a level goes through here.
+    pub fn level_entry(&self, campaign: &Campaign) -> AppState {
+        if self.pending_question(campaign).is_some() {
+            AppState::Prompt
+        } else {
+            AppState::Playing
+        }
     }
 }
 
@@ -200,7 +259,41 @@ impl Current<'_> {
     pub fn number(&self) -> usize {
         self.progress.level + 1
     }
+
+    /// A level text in the given language, with `{name}` and `{city}` filled
+    /// from the profile (or a neutral word while they are unknown).
+    pub fn text(&self, text: &Tr, language: Language) -> String {
+        fill(text.get(language), &self.progress.profile, language)
+    }
 }
+
+/// Replaces `{name}` and `{city}` in a text with the profile's answers.
+pub fn fill(text: &str, profile: &Profile, language: Language) -> String {
+    let name = profile
+        .name
+        .as_deref()
+        .unwrap_or_else(|| ui(language, Ui::SomeTraveler));
+    let city = profile
+        .city
+        .as_deref()
+        .unwrap_or_else(|| ui(language, Ui::SomeCity));
+    let filled = text.replace("{name}", name).replace("{city}", city);
+    // A neutral word that opens a sentence ("the traveler finds...") needs
+    // a capital letter; a name or city keeps the spelling the player typed.
+    let starts_with_fallback = (text.starts_with("{name}") && profile.name.is_none())
+        || (text.starts_with("{city}") && profile.city.is_none());
+    if starts_with_fallback {
+        let mut chars = filled.chars();
+        if let Some(first) = chars.next() {
+            return first.to_uppercase().chain(chars).collect();
+        }
+    }
+    filled
+}
+
+/// The placeholders level texts may use.
+#[cfg(test)]
+const PLACEHOLDERS: [&str; 2] = ["{name}", "{city}"];
 
 /// Run condition: the feature is unlocked at the level being played.
 pub fn unlocked(feature: Feature) -> impl Fn(Res<Campaign>, Res<Progress>) -> bool + Clone {
@@ -273,10 +366,69 @@ mod tests {
     }
 
     #[test]
+    fn placeholders_are_filled_from_the_profile() {
+        let mut profile = Profile::default();
+        assert_eq!(
+            fill("Hi {name}", &profile, Language::En),
+            format!("Hi {}", ui(Language::En, Ui::SomeTraveler))
+        );
+        profile.set(ProfileField::Name, "Ada".into());
+        profile.set(ProfileField::City, "Quito".into());
+        assert_eq!(
+            fill("{name} from {city}", &profile, Language::Es),
+            "Ada from Quito"
+        );
+    }
+
+    #[test]
+    fn a_fallback_that_opens_a_sentence_is_capitalized() {
+        let text = fill("{name} finds it", &Profile::default(), Language::En);
+        assert!(text.starts_with('T'), "{text}");
+    }
+
+    #[test]
+    fn level_texts_use_only_known_placeholders() {
+        for level in Campaign::load().levels {
+            for text in level.data.texts() {
+                for lang in Language::ALL {
+                    let mut rest = text.get(lang).to_string();
+                    for placeholder in PLACEHOLDERS {
+                        rest = rest.replace(placeholder, "");
+                    }
+                    assert!(
+                        !rest.contains('{') && !rest.contains('}'),
+                        "level {}: unknown placeholder in {:?}",
+                        level.id,
+                        text.get(lang)
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn a_level_asks_only_while_the_answer_is_missing() {
+        let campaign = Campaign::load();
+        let asking = campaign
+            .levels
+            .iter()
+            .position(|l| l.ask == Some(ProfileField::Name))
+            .expect("some level asks for the name");
+        let mut progress = Progress {
+            level: asking,
+            ..default()
+        };
+        assert_eq!(progress.level_entry(&campaign), AppState::Prompt);
+        progress.profile.set(ProfileField::Name, "Ada".into());
+        assert_eq!(progress.level_entry(&campaign), AppState::Playing);
+    }
+
+    #[test]
     fn progress_wraps_after_the_last_level() {
         let campaign = Campaign::load();
         let mut progress = Progress {
             level: campaign.levels.len() - 1,
+            ..default()
         };
         assert!(progress.is_last(&campaign));
         progress.advance(&campaign);

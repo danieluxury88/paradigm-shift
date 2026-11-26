@@ -53,9 +53,9 @@
             es: "Una comprensión nueva que surge al trabajar las tensiones entre perspectivas. Puede conservar las diferencias sin forzarlas a una sola respuesta.",
         ),
         example: (
-            en: "The old map knew where the residents gathered; the new one showed a safe route. The traveler needed both to find the crossing.",
-            de: "Die alte Karte zeigte, wo sich die Bewohner trafen; die neue zeigte einen sicheren Weg. Für den Übergang brauchte die reisende Person beide.",
-            es: "El mapa antiguo mostraba dónde se reunían los habitantes; el nuevo, una ruta segura. Para encontrar el cruce, la persona viajera necesitó ambos.",
+            en: "The old map knew where the residents gathered; the new one showed a safe route. {name} needed both to find the crossing.",
+            de: "Die alte Karte zeigte, wo sich die Bewohner trafen; die neue zeigte einen sicheren Weg. Für den Übergang brauchte {name} beide.",
+            es: "El mapa antiguo mostraba dónde se reunían los habitantes; el nuevo, una ruta segura. Para encontrar el cruce, {name} necesitó ambos.",
         ),
         practice: (
             en: "After hearing two views, ask what a next step could preserve from each.",

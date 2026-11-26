@@ -114,7 +114,7 @@ fn spawn_hud(mut commands: Commands, current: Current, language: Res<Language>, 
                                 Text::new(format!(
                                     "{} · {}",
                                     current.number(),
-                                    level.title.get(lang)
+                                    current.text(&level.title, lang)
                                 )),
                                 TextFont {
                                     font: fonts.bold.clone().into(),
@@ -152,7 +152,7 @@ fn spawn_hud(mut commands: Commands, current: Current, language: Res<Language>, 
                 },
                 children![
                     (
-                        Text::new(level.hint.get(lang)),
+                        Text::new(current.text(&level.hint, lang)),
                         size(17.0),
                         TextColor(Color::srgb(0.75, 0.75, 0.72))
                     ),

@@ -6,7 +6,7 @@
 use bevy::prelude::*;
 
 use crate::AppState;
-use crate::campaign::{Current, Progress};
+use crate::campaign::{Campaign, Current, Progress};
 use crate::i18n::{Fonts, Language, Ui, ui};
 use crate::save::SaveFound;
 
@@ -46,7 +46,7 @@ fn spawn_title(
             ui(lang, Ui::Continue),
             ui(lang, Ui::Level),
             current.number(),
-            current.level().data.title.get(lang),
+            current.text(&current.level().data.title, lang),
             ui(lang, Ui::NewGame),
         )
     } else {
@@ -116,13 +116,14 @@ fn rebuild_on_language_change(
 fn choose(
     keys: Res<ButtonInput<KeyCode>>,
     found: Res<SaveFound>,
+    campaign: Res<Campaign>,
     mut progress: ResMut<Progress>,
     mut next: ResMut<NextState<AppState>>,
 ) {
     if keys.just_pressed(KeyCode::Backspace) && can_continue(*found, &progress) {
         *progress = Progress::default();
-        next.set(AppState::Playing);
+        next.set(progress.level_entry(&campaign));
     } else if keys.any_just_pressed([KeyCode::Enter, KeyCode::NumpadEnter, KeyCode::Space]) {
-        next.set(AppState::Playing);
+        next.set(progress.level_entry(&campaign));
     }
 }

@@ -6,9 +6,9 @@
         es: "La respuesta silenciosa",
     ),
     hint: (
-        en: "No one answered the bell. The empty windows still told the traveler something.",
-        de: "Niemand antwortete auf die Glocke. Die leeren Fenster erzählten der reisenden Person trotzdem etwas.",
-        es: "Nadie respondió a la campana. Aun así, las ventanas vacías le dijeron algo a la persona viajera.",
+        en: "No one answered the bell. The empty windows still told {name} something.",
+        de: "Niemand antwortete auf die Glocke. Die leeren Fenster erzählten {name} trotzdem etwas.",
+        es: "Nadie respondió a la campana. Aun así, las ventanas vacías le dijeron algo a {name}.",
     ),
     lenses: (
         (
@@ -53,9 +53,9 @@
             es: "En una interacción, el silencio y el retraimiento pueden interpretarse como comunicación aunque no se digan palabras. Esa interpretación también puede ser errónea.",
         ),
         example: (
-            en: "The closed shutters might mean anger, fear, exhaustion or simply that nobody is home. The traveler has to look for context.",
-            de: "Die geschlossenen Fensterläden könnten Ärger, Angst, Erschöpfung oder einfach bedeuten, dass niemand zu Hause ist. Die reisende Person braucht mehr Kontext.",
-            es: "Las contraventanas cerradas podrían significar enojo, miedo, cansancio o simplemente que no hay nadie en casa. La persona viajera necesita contexto.",
+            en: "The closed shutters might mean anger, fear, exhaustion or simply that nobody is home. {name} has to look for context.",
+            de: "Die geschlossenen Fensterläden könnten Ärger, Angst, Erschöpfung oder einfach bedeuten, dass niemand zu Hause ist. {name} braucht mehr Kontext.",
+            es: "Las contraventanas cerradas podrían significar enojo, miedo, cansancio o simplemente que no hay nadie en casa. {name} necesita contexto.",
         ),
         practice: (
             en: "Notice what silence makes you assume, then check whether the other person would describe it the same way.",

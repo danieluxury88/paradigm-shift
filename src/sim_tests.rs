@@ -4,12 +4,15 @@
 
 use std::time::Duration;
 
+use bevy::input::ButtonState;
+use bevy::input::keyboard::{Key, KeyboardInput};
 use bevy::prelude::*;
 use bevy::state::app::StatesPlugin;
 use bevy::time::TimeUpdateStrategy;
 
 use crate::AppState;
 use crate::campaign::{Campaign, Progress};
+use crate::i18n::Language;
 use crate::lens::ActiveLens;
 use crate::level::{Cell, LevelGrid};
 use crate::lives::Lives;
@@ -37,6 +40,7 @@ fn game_with_store(level: usize, store: Box<dyn crate::save::Store>) -> App {
             bold: Handle::default(),
         })
         .init_state::<AppState>()
+        .add_message::<KeyboardInput>()
         .insert_resource(crate::save::SaveStore(store))
         .add_plugins((
             crate::campaign::CampaignPlugin,
@@ -46,6 +50,8 @@ fn game_with_store(level: usize, store: Box<dyn crate::save::Store>) -> App {
             crate::player::PlayerPlugin,
             crate::straw::StrawPlugin,
             crate::lives::LivesPlugin,
+            crate::card::CardPlugin,
+            crate::prompt::PromptPlugin,
         ));
     app.world_mut().resource_mut::<Progress>().level = level;
     app.world_mut()
@@ -353,4 +359,69 @@ fn progress_is_saved_and_restored_in_the_next_session() {
         .add_plugins((crate::campaign::CampaignPlugin, crate::save::SavePlugin));
     assert_eq!(second.world().resource::<Progress>().level, 5);
     assert!(second.world().resource::<crate::save::SaveFound>().0);
+}
+
+/// Types text the way a keyboard would: one pressed `KeyboardInput` per key.
+fn type_keys(app: &mut App, keys: &[Key]) {
+    for key in keys {
+        app.world_mut().write_message(KeyboardInput {
+            key_code: KeyCode::KeyA,
+            logical_key: key.clone(),
+            state: ButtonState::Pressed,
+            text: None,
+            repeat: false,
+            window: Entity::PLACEHOLDER,
+        });
+        run(app, 1);
+    }
+}
+
+#[test]
+fn level_5_asks_for_the_name_and_the_texts_use_it() {
+    let mut app = game(3);
+    app.world_mut()
+        .resource_mut::<NextState<AppState>>()
+        .set(AppState::Card);
+    run(&mut app, 2);
+    tap(&mut app, KeyCode::Enter);
+    run(&mut app, 1);
+    assert_eq!(state(&app), AppState::Prompt);
+
+    let ada = ["A", "d", "a"].map(|c| Key::Character(c.into()));
+    type_keys(&mut app, &ada);
+    type_keys(&mut app, &[Key::Enter]);
+    run(&mut app, 1);
+    assert_eq!(state(&app), AppState::Playing);
+    run(&mut app, 2);
+    let tiles = app
+        .world_mut()
+        .query::<&crate::level::Tile>()
+        .iter(app.world())
+        .count();
+    assert!(
+        tiles > 0,
+        "the level's tiles are spawned after the question"
+    );
+    player_position(&mut app); // panics unless exactly one player exists
+
+    let progress = app.world().resource::<Progress>().clone();
+    assert_eq!(progress.level, 4);
+    assert_eq!(progress.profile.name.as_deref(), Some("Ada"));
+    let campaign = app.world().resource::<Campaign>();
+    let example = &campaign.levels[4].data.card.example;
+    let text = crate::campaign::fill(example.get(Language::En), &progress.profile, Language::En);
+    assert!(text.starts_with("Ada "), "{text}");
+}
+
+#[test]
+fn the_question_is_not_asked_again_once_answered() {
+    let mut app = game(3);
+    app.world_mut().resource_mut::<Progress>().profile.name = Some("Ada".into());
+    app.world_mut()
+        .resource_mut::<NextState<AppState>>()
+        .set(AppState::Card);
+    run(&mut app, 2);
+    tap(&mut app, KeyCode::Enter);
+    run(&mut app, 1);
+    assert_eq!(state(&app), AppState::Playing);
 }

@@ -1,3 +1,4 @@
+#![enable(implicit_some)]
 // The campaign: worlds in play order and the levels each one contains, by
 // file name (without .ron). A level may unlock features with `unlocks: [...]`
 // (see `Feature` in src/campaign.rs); once unlocked, a feature stays on for
@@ -6,6 +7,9 @@
 // Per world, once lives are unlocked: `lives` is the budget for the whole
 // world (default 5) and `out_of_lives` what running out costs:
 // `RestartLevel` (default) or `RestartWorld`. Later worlds are harder.
+//
+// A level may ask the player something first with `ask: Name` or `ask: City`;
+// the answer is saved and fills `{name}` / `{city}` in every level text.
 (
     worlds: [
         (
@@ -21,7 +25,7 @@
                 (file: "02-inside-and-outside"),
                 (file: "03-straw-men"),
                 (file: "04-either-or", unlocks: [Lives]),
-                (file: "05-the-unfitting-star"),
+                (file: "05-the-unfitting-star", ask: Name),
                 (file: "06-the-shared-crossing"),
             ],
         ),
@@ -48,7 +52,7 @@
             lives: 3,
             out_of_lives: RestartWorld,
             levels: [
-                (file: "10-the-borrowed-answer"),
+                (file: "10-the-borrowed-answer", ask: City),
                 (file: "11-the-unassigned-seat"),
                 (file: "12-the-nearby-need"),
             ],

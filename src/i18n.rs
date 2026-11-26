@@ -90,6 +90,13 @@ pub enum Ui {
     Continue,
     NewGame,
     Level,
+    SomeTraveler,
+    SomeCity,
+    AskName,
+    AskNameWhy,
+    AskCity,
+    AskCityWhy,
+    Confirm,
 }
 
 pub fn ui(language: Language, key: Ui) -> &'static str {
@@ -146,6 +153,27 @@ pub fn ui(language: Language, key: Ui) -> &'static str {
         (Ui::Level, En) => "level",
         (Ui::Level, De) => "Level",
         (Ui::Level, Es) => "nivel",
+        (Ui::SomeTraveler, En) => "the traveler",
+        (Ui::SomeTraveler, De) => "die reisende Person",
+        (Ui::SomeTraveler, Es) => "la persona viajera",
+        (Ui::SomeCity, En) => "your city",
+        (Ui::SomeCity, De) => "deiner Stadt",
+        (Ui::SomeCity, Es) => "tu ciudad",
+        (Ui::AskName, En) => "What is your name, traveler?",
+        (Ui::AskName, De) => "Wie heißt du, reisende Person?",
+        (Ui::AskName, Es) => "¿Cómo te llamas, persona viajera?",
+        (Ui::AskNameWhy, En) => "The people of these worlds will remember it.",
+        (Ui::AskNameWhy, De) => "Die Menschen dieser Welten werden ihn sich merken.",
+        (Ui::AskNameWhy, Es) => "La gente de estos mundos lo recordará.",
+        (Ui::AskCity, En) => "Which city do you come from?",
+        (Ui::AskCity, De) => "Aus welcher Stadt kommst du?",
+        (Ui::AskCity, Es) => "¿De qué ciudad vienes?",
+        (Ui::AskCityWhy, En) => "The habits on the concept cards will point back to it.",
+        (Ui::AskCityWhy, De) => "Die Übungen auf den Konzeptkarten beziehen sich darauf.",
+        (Ui::AskCityWhy, Es) => "Los hábitos de las tarjetas de concepto se referirán a ella.",
+        (Ui::Confirm, En) => "confirm",
+        (Ui::Confirm, De) => "bestätigen",
+        (Ui::Confirm, Es) => "confirmar",
     }
 }
 
@@ -168,7 +196,11 @@ impl Plugin for I18nPlugin {
 
         app.insert_resource(Fonts { bold })
             .init_resource::<Language>()
-            .add_systems(Update, cycle_language);
+            // While typing an answer, L is just a letter.
+            .add_systems(
+                Update,
+                cycle_language.run_if(not(in_state(crate::AppState::Prompt))),
+            );
     }
 }
 

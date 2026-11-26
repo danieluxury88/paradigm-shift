@@ -58,9 +58,9 @@
             es: "La experta midió con precisión el puente antiguo, pero solo los vecinos sabían qué piedras se movían durante la crecida estacional.",
         ),
         practice: (
-            en: "Respect expertise and ask what evidence, scope and local knowledge support the claim.",
-            de: "Respektiere Fachwissen und frag nach Belegen, Geltungsbereich und lokalem Wissen.",
-            es: "Respeta la experiencia y pregunta qué evidencia, alcance y conocimiento local sostienen la afirmación.",
+            en: "Respect expertise and ask what evidence, scope and local knowledge support the claim. In {city}, who knows what the official maps leave out?",
+            de: "Respektiere Fachwissen und frag nach Belegen, Geltungsbereich und lokalem Wissen. Wer in {city} weiß, was die offiziellen Karten auslassen?",
+            es: "Respeta la experiencia y pregunta qué evidencia, alcance y conocimiento local sostienen la afirmación. En {city}, ¿quién sabe lo que los mapas oficiales dejan fuera?",
         ),
     ),
 )

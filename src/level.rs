@@ -41,7 +41,7 @@ impl LevelData {
 
     /// Every translatable text of the level, for the completeness test.
     #[cfg(test)]
-    fn texts(&self) -> [&Tr; 9] {
+    pub fn texts(&self) -> [&Tr; 9] {
         let c = &self.card;
         [
             &self.title,

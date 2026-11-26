@@ -53,9 +53,9 @@
             es: "Al interpretar una afirmación ambigua, prefiere una lectura razonable y coherente a una versión débil que sea fácil de descartar.",
         ),
         example: (
-            en: "The keeper says, 'We cannot open the bridge for everyone.' The traveler first asks whether the keeper means 'not safely yet' rather than 'never'.",
-            de: "Die Brückenwache sagt: „Wir können die Brücke nicht für alle öffnen.“ Die reisende Person fragt erst, ob damit „noch nicht sicher“ statt „niemals“ gemeint ist.",
-            es: "Quien cuida el puente dice: «No podemos abrirlo para todo el mundo». La persona viajera pregunta si significa «todavía no es seguro» en vez de «nunca».",
+            en: "The keeper says, 'We cannot open the bridge for everyone.' {name} first asks whether the keeper means 'not safely yet' rather than 'never'.",
+            de: "Die Brückenwache sagt: „Wir können die Brücke nicht für alle öffnen.“ {name} fragt erst, ob damit „noch nicht sicher“ statt „niemals“ gemeint ist.",
+            es: "Quien cuida el puente dice: «No podemos abrirlo para todo el mundo». {name} pregunta si significa «todavía no es seguro» en vez de «nunca».",
         ),
         practice: (
             en: "Restate a difficult claim in a form its speaker could accept before you challenge it.",

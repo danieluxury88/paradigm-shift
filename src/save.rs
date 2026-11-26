@@ -196,7 +196,10 @@ mod tests {
     #[test]
     fn a_save_round_trips() {
         let campaign = Campaign::load();
-        let progress = Progress { level: 4 };
+        let progress = Progress {
+            level: 4,
+            ..default()
+        };
         let text = serialize(&progress, Language::Es);
         assert_eq!(parse(&text, &campaign), Some((progress, Language::Es)));
     }
@@ -209,6 +212,7 @@ mod tests {
         assert_eq!(parse(&old, &campaign), None);
         let beyond = Progress {
             level: campaign.levels.len(),
+            ..default()
         };
         assert_eq!(parse(&serialize(&beyond, Language::En), &campaign), None);
     }

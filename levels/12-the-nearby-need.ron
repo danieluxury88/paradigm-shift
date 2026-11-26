@@ -58,9 +58,9 @@
             es: "Una regla común para el puente puede ser justa en su forma, pero una vecina que no puede subir los escalones necesita que la comunidad vea sus efectos.",
         ),
         practice: (
-            en: "Ask both what rule should apply and who will need help living under it.",
-            de: "Frag sowohl, welche Regel gelten soll, als auch, wer Unterstützung braucht, um mit ihr zu leben.",
-            es: "Pregunta tanto qué regla debería aplicarse como quién necesitará apoyo para vivir con ella.",
+            en: "Ask both what rule should apply and who will need help living under it. Who near you in {city} might that be?",
+            de: "Frag sowohl, welche Regel gelten soll, als auch, wer Unterstützung braucht, um mit ihr zu leben. Wer könnte das in {city} in deiner Nähe sein?",
+            es: "Pregunta tanto qué regla debería aplicarse como quién necesitará apoyo para vivir con ella. ¿Quién podría ser en {city}, cerca de ti?",
         ),
     ),
 )

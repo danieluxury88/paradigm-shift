@@ -53,9 +53,9 @@
             es: "Una observación que no encaja con las expectativas de un marco compartido. Puede ignorarse, explicarse de forma forzada o llevar a revisar el marco.",
         ),
         example: (
-            en: "The traveler finds a mark that appears on neither map, yet it points toward the crossing both maps miss.",
-            de: "Die reisende Person findet eine Markierung, die auf keiner Karte steht und doch zu dem Übergang führt, den beide Karten übersehen.",
-            es: "La persona viajera encuentra una marca que no aparece en ningún mapa y que señala el cruce que ambos mapas omiten.",
+            en: "{name} finds a mark that appears on neither map, yet it points toward the crossing both maps miss.",
+            de: "{name} findet eine Markierung, die auf keiner Karte steht und doch zu dem Übergang führt, den beide Karten übersehen.",
+            es: "{name} encuentra una marca que no aparece en ningún mapa y que señala el cruce que ambos mapas omiten.",
         ),
         practice: (
             en: "When a detail refuses to fit, keep it visible long enough to ask what your map leaves out.",

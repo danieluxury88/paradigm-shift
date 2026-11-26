@@ -53,9 +53,9 @@
             es: "Un experimento mental: elige principios para una sociedad sin saber qué posición ocuparás en ella.",
         ),
         example: (
-            en: "The traveler agrees on bridge rules before learning whether they will live upstream, downstream or on the island between.",
-            de: "Die reisende Person einigt sich auf Brückenregeln, bevor sie weiß, ob sie flussaufwärts, flussabwärts oder auf der Insel dazwischen leben wird.",
-            es: "La persona viajera acuerda las reglas del puente sin saber si vivirá río arriba, río abajo o en la isla intermedia.",
+            en: "{name} agrees on bridge rules before learning whether they will live upstream, downstream or on the island between.",
+            de: "{name} einigt sich auf Brückenregeln, bevor sie weiß, ob sie flussaufwärts, flussabwärts oder auf der Insel dazwischen leben wird.",
+            es: "{name} acuerda las reglas del puente sin saber si vivirá río arriba, río abajo o en la isla intermedia.",
         ),
         practice: (
             en: "Before setting a rule, imagine having to live with it from the least protected position.",

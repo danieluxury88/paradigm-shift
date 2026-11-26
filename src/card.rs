@@ -82,19 +82,23 @@ fn spawn_card(
                     TextColor(Color::srgb(0.95, 0.85, 0.30)),
                 ),
                 (
-                    Text::new(card.term.get(lang)),
+                    Text::new(current.text(&card.term, lang)),
                     TextFont {
                         font: fonts.bold.clone().into(),
                         ..size(42.0)
                     },
                 ),
-                (Text::new(card.origin.get(lang)), size(16.0), soft),
-                (Text::new(card.definition.get(lang)), size(21.0)),
+                (
+                    Text::new(current.text(&card.origin, lang)),
+                    size(16.0),
+                    soft
+                ),
+                (Text::new(current.text(&card.definition, lang)), size(21.0)),
                 (
                     Text::new(format!(
                         "{}: {}",
                         ui(lang, Ui::Example),
-                        card.example.get(lang)
+                        current.text(&card.example, lang)
                     )),
                     size(17.0),
                     soft
@@ -103,7 +107,7 @@ fn spawn_card(
                     Text::new(format!(
                         "{}: {}",
                         ui(lang, Ui::TryIt),
-                        card.practice.get(lang)
+                        current.text(&card.practice, lang)
                     )),
                     size(17.0),
                     TextColor(Color::srgb(0.45, 0.80, 0.70)),
@@ -146,6 +150,6 @@ fn continue_on_enter(
 ) {
     if keys.any_just_pressed([KeyCode::Enter, KeyCode::NumpadEnter]) {
         progress.advance(&campaign);
-        next.set(AppState::Playing);
+        next.set(progress.level_entry(&campaign));
     }
 }
