@@ -1,6 +1,6 @@
 # Design
 
-Last verified: 2026-11-23
+Last verified: 2026-11-25
 
 ## Pitch
 
@@ -11,7 +11,8 @@ The same world looks different depending on whose experience you enter. In Parad
 - **Play first, name later.** Each level makes the player experience one idea through the mechanic; only after solving it does a concept card name the idea, with its origin, a real-world example and a "try it" habit.
 - **Perspectives are situated.** A perspective reflects a person's experiences, needs and knowledge. It reveals real things while leaving other things out; it is never a simple good-side/bad-side label. Use fictional people, not stand-ins for real political parties, flags or public figures.
 - **Keep the traveler, change the world.** The protagonist recurs across worlds. Each world brings new people, a new setting and its own visual language.
-- **Data, not code.** Level maps and text live in `levels/*.ron`. The current prototype still registers each file in `LEVEL_FILES` in [src/level.rs](../src/level.rs); a world manifest can replace that flat list when the game grows.
+- **Data, not code.** Level maps and text live in `levels/*.ron`; the world manifest `levels/worlds.ron` sets the worlds, their order and what each level unlocks. `build.rs` embeds every level file, and [src/campaign.rs](../src/campaign.rs) validates the whole campaign at startup.
+- **The game grows as you play.** Features such as lives, a timer or music are unlocked by levels in the manifest. Each feature is its own plugin gated with `run_if(unlocked(Feature::X))`, so it does not need to know which level turns it on (see [Progression](#progression)).
 
 ## Core loop
 
@@ -21,6 +22,23 @@ The same world looks different depending on whose experience you enter. In Parad
 4. ENTER loads the next level.
 
 This is the playable foundation. The longer-term story makes each shift an encounter with a person's point of view: what they notice, what they fear or value, and what their surroundings mean to them. The player remains the traveler rather than becoming a different protagonist in each world.
+
+## Progression
+
+The experience is incremental: the first levels are only movement and SHIFT, and the game gains layers as the traveler advances. The schedule lives in `levels/worlds.ron` (`unlocks: [...]` per level), so it can be retuned without touching code.
+
+| Layer | Where | What it holds |
+|---|---|---|
+| Content | `Campaign` in [src/campaign.rs](../src/campaign.rs) | Worlds and levels in play order, with what each level unlocks; read-only while playing |
+| Player state | `Progress` in [src/campaign.rs](../src/campaign.rs) | The level being played; later the profile and records, which is what gets saved |
+| Features | One plugin per feature | Systems gated with `run_if(unlocked(Feature::X))` |
+| HUD slots | `Slot` in [src/hud.rs](../src/hud.rs) | The HUD owns the layout and spawns empty slots; each feature fills its own slot from an `Added<HudSlot>` query, which also covers the rebuild after a language change |
+
+Current schedule:
+
+| Level | Unlocks | Notes |
+|---|---|---|
+| 4 | Lives | Per-world budget (5, 4, 3 in the three worlds). Out of lives: restart the level in world 1, back to the world's first level in worlds 2 and 3 (`out_of_lives` in the manifest). Every respawn, fall or R, costs a life. |
 
 ## Worlds and levels
 

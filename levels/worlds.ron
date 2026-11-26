@@ -1,0 +1,57 @@
+// The campaign: worlds in play order and the levels each one contains, by
+// file name (without .ron). A level may unlock features with `unlocks: [...]`
+// (see `Feature` in src/campaign.rs); once unlocked, a feature stays on for
+// every later level. Texts: en is required, de and es too (tests check it).
+//
+// Per world, once lives are unlocked: `lives` is the budget for the whole
+// world (default 5) and `out_of_lives` what running out costs:
+// `RestartLevel` (default) or `RestartWorld`. Later worlds are harder.
+(
+    worlds: [
+        (
+            name: (
+                en: "The First Crossing",
+                de: "Der erste Übergang",
+                es: "El primer cruce",
+            ),
+            lives: 5,
+            out_of_lives: RestartLevel,
+            levels: [
+                (file: "01-two-ways-of-seeing"),
+                (file: "02-inside-and-outside"),
+                (file: "03-straw-men"),
+                (file: "04-either-or", unlocks: [Lives]),
+                (file: "05-the-unfitting-star"),
+                (file: "06-the-shared-crossing"),
+            ],
+        ),
+        (
+            name: (
+                en: "The Listening City",
+                de: "Die Stadt, die zuhört",
+                es: "La ciudad que escucha",
+            ),
+            lives: 4,
+            out_of_lives: RestartWorld,
+            levels: [
+                (file: "07-signal-and-noise"),
+                (file: "08-the-silent-reply"),
+                (file: "09-a-fair-reading"),
+            ],
+        ),
+        (
+            name: (
+                en: "The Common Ground",
+                de: "Der gemeinsame Grund",
+                es: "El terreno común",
+            ),
+            lives: 3,
+            out_of_lives: RestartWorld,
+            levels: [
+                (file: "10-the-borrowed-answer"),
+                (file: "11-the-unassigned-seat"),
+                (file: "12-the-nearby-need"),
+            ],
+        ),
+    ],
+)

@@ -20,7 +20,7 @@ test: ## Run the unit tests (level files are validated here)
 
 check: ## Format check, lints and tests
 	cargo fmt --check
-	cargo clippy --features dev -- -D warnings
+	cargo clippy --features dev --all-targets -- -D warnings
 	cargo test --features dev
 
 serve: ## Play the web build locally with live reload (http://127.0.0.1:8080)

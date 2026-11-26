@@ -88,6 +88,13 @@ fn apply(
     Some(next)
 }
 
+/// A visited state with the action that led to it, to rebuild the plan.
+struct Visit {
+    state: State,
+    came_from: Option<(usize, Action)>,
+    depth: usize,
+}
+
 struct Node {
     score: i64,
     index: usize,
@@ -148,24 +155,28 @@ fn search(grid: &LevelGrid, start: State, delta: f32, allow_shift: bool) -> Opti
         }
     }
 
-    // Nodes are stored once; the heap holds indices. `parent` rebuilds the plan.
-    let mut states: Vec<(State, Option<(usize, Action)>, usize)> = vec![(start.clone(), None, 0)];
+    // Visits are stored once; the heap holds indices into them.
+    let mut states = vec![Visit {
+        state: start.clone(),
+        came_from: None,
+        depth: 0,
+    }];
     let mut visited = HashSet::new();
     visited.insert(key(&start));
     let mut heap = BinaryHeap::new();
     heap.push(Node { score: 0, index: 0 });
 
     while let Some(Node { index, .. }) = heap.pop() {
-        let depth = states[index].2;
+        let depth = states[index].depth;
         for &action in &actions {
             let mut reached = false;
-            let Some(next) = apply(&grid, &states[index].0, action, delta, &mut reached) else {
+            let Some(next) = apply(&grid, &states[index].state, action, delta, &mut reached) else {
                 continue;
             };
             if reached {
                 let mut plan = vec![action];
                 let mut at = index;
-                while let Some((parent, step)) = states[at].1 {
+                while let Some((parent, step)) = states[at].came_from {
                     plan.push(step);
                     at = parent;
                 }
@@ -179,7 +190,11 @@ fn search(grid: &LevelGrid, start: State, delta: f32, allow_shift: bool) -> Opti
             // search does not wander forever.
             let distance = next.position.distance(goal);
             let score = (distance * 4.0) as i64 + depth as i64 * 8;
-            states.push((next, Some((index, action)), depth + 1));
+            states.push(Visit {
+                state: next,
+                came_from: Some((index, action)),
+                depth: depth + 1,
+            });
             heap.push(Node {
                 score,
                 index: states.len() - 1,

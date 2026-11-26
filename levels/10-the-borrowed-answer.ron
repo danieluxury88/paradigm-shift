@@ -1,10 +1,5 @@
 // World 3: the traveler weighs expert testimony without surrendering judgment.
 (
-    world: (
-        en: "The Common Ground",
-        de: "Der gemeinsame Grund",
-        es: "El terreno común",
-    ),
     title: (
         en: "The borrowed answer",
         de: "Die geliehene Antwort",

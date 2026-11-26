@@ -1,60 +1,15 @@
-//! Levels: loading the RON data files, validating them, and spawning tiles.
-//!
-//! Level files are embedded in the binary with `include_str!`, so the web build
-//! needs no asset loading. Adding a level means adding a file and one line to
-//! `LEVEL_FILES`.
+//! Levels: the data in each RON file, the map as a grid of cells, and
+//! spawning tiles. Which levels exist and in what order is the campaign's
+//! business (`campaign.rs`); files are embedded in the binary by build.rs, so
+//! the web build needs no asset loading.
 
 use bevy::prelude::*;
 use serde::Deserialize;
 
+use crate::campaign::Current;
 use crate::i18n::{Language, Tr};
 use crate::lens::Lens;
 use crate::{AppState, TILE};
-
-const LEVEL_FILES: &[(&str, &str)] = &[
-    (
-        "01-two-ways-of-seeing",
-        include_str!("../levels/01-two-ways-of-seeing.ron"),
-    ),
-    (
-        "02-inside-and-outside",
-        include_str!("../levels/02-inside-and-outside.ron"),
-    ),
-    ("03-straw-men", include_str!("../levels/03-straw-men.ron")),
-    ("04-either-or", include_str!("../levels/04-either-or.ron")),
-    (
-        "05-the-unfitting-star",
-        include_str!("../levels/05-the-unfitting-star.ron"),
-    ),
-    (
-        "06-the-shared-crossing",
-        include_str!("../levels/06-the-shared-crossing.ron"),
-    ),
-    (
-        "07-signal-and-noise",
-        include_str!("../levels/07-signal-and-noise.ron"),
-    ),
-    (
-        "08-the-silent-reply",
-        include_str!("../levels/08-the-silent-reply.ron"),
-    ),
-    (
-        "09-a-fair-reading",
-        include_str!("../levels/09-a-fair-reading.ron"),
-    ),
-    (
-        "10-the-borrowed-answer",
-        include_str!("../levels/10-the-borrowed-answer.ron"),
-    ),
-    (
-        "11-the-unassigned-seat",
-        include_str!("../levels/11-the-unassigned-seat.ron"),
-    ),
-    (
-        "12-the-nearby-need",
-        include_str!("../levels/12-the-nearby-need.ron"),
-    ),
-];
 
 /// The concept a level teaches, shown on a card once the level is solved.
 #[derive(Debug, Clone, Deserialize)]
@@ -69,7 +24,6 @@ pub struct ConceptCard {
 /// One level exactly as written in its `.ron` file.
 #[derive(Debug, Clone, Deserialize)]
 pub struct LevelData {
-    pub world: Tr,
     pub title: Tr,
     pub hint: Tr,
     pub lenses: (Tr, Tr),
@@ -87,10 +41,9 @@ impl LevelData {
 
     /// Every translatable text of the level, for the completeness test.
     #[cfg(test)]
-    fn texts(&self) -> [&Tr; 10] {
+    fn texts(&self) -> [&Tr; 9] {
         let c = &self.card;
         [
-            &self.world,
             &self.title,
             &self.hint,
             &self.lenses.0,
@@ -137,28 +90,6 @@ impl Cell {
             Cell::LensOnly(owner) => owner == lens,
             _ => false,
         }
-    }
-}
-
-/// All levels, parsed once at startup, and which one is being played.
-#[derive(Resource)]
-pub struct Levels {
-    pub all: Vec<LevelData>,
-    pub current: usize,
-}
-
-impl Levels {
-    pub fn current(&self) -> &LevelData {
-        &self.all[self.current]
-    }
-
-    /// Moves to the next level, wrapping around after the last one.
-    pub fn advance(&mut self) {
-        self.current = (self.current + 1) % self.all.len();
-    }
-
-    pub fn is_last(&self) -> bool {
-        self.current + 1 == self.all.len()
     }
 }
 
@@ -287,30 +218,14 @@ pub struct LevelPlugin;
 
 impl Plugin for LevelPlugin {
     fn build(&self, app: &mut App) {
-        app.insert_resource(load_levels())
-            .init_resource::<LevelGrid>()
+        app.init_resource::<LevelGrid>()
             .add_systems(OnEnter(AppState::Playing), spawn_level);
     }
 }
 
-/// Parses every level file. A broken file stops the game at startup with a
-/// clear message, instead of failing later in the middle of a level.
-fn load_levels() -> Levels {
-    let all = LEVEL_FILES
-        .iter()
-        .map(|(name, source)| {
-            let level: LevelData =
-                ron::from_str(source).unwrap_or_else(|e| panic!("level {name}: {e}"));
-            LevelGrid::parse(&level.map).unwrap_or_else(|e| panic!("level {name}: {e}"));
-            level
-        })
-        .collect();
-    Levels { all, current: 0 }
-}
-
-pub fn spawn_level(mut commands: Commands, levels: Res<Levels>, mut grid: ResMut<LevelGrid>) {
-    // Already validated in `load_levels`, so this cannot fail here.
-    *grid = LevelGrid::parse(&levels.current().map).expect("validated at startup");
+pub fn spawn_level(mut commands: Commands, current: Current, mut grid: ResMut<LevelGrid>) {
+    // Already validated when the campaign loaded, so this cannot fail here.
+    *grid = LevelGrid::parse(&current.level().data.map).expect("validated at startup");
 
     for (row, cells) in grid.cells.iter().enumerate() {
         for (col, &cell) in cells.iter().enumerate() {
@@ -338,21 +253,16 @@ pub fn spawn_level(mut commands: Commands, levels: Res<Levels>, mut grid: ResMut
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn every_level_file_is_valid() {
-        // `load_levels` panics on the first invalid file.
-        let levels = load_levels();
-        assert_eq!(levels.all.len(), LEVEL_FILES.len());
-    }
+    use crate::campaign::Campaign;
 
     #[test]
     fn every_level_text_is_translated() {
-        for (level, (name, _)) in load_levels().all.iter().zip(LEVEL_FILES) {
-            for text in level.texts() {
+        for level in Campaign::load().levels {
+            for text in level.data.texts() {
                 assert!(
                     text.is_complete(),
-                    "level {name}: missing translation for {:?}",
+                    "level {}: missing translation for {:?}",
+                    level.id,
                     text.en
                 );
             }

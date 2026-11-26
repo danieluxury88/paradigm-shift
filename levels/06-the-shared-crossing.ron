@@ -1,10 +1,5 @@
 // World 1 finale: the traveler carries forward what each perspective made visible.
 (
-    world: (
-        en: "The First Crossing",
-        de: "Der erste Übergang",
-        es: "El primer cruce",
-    ),
     title: (
         en: "The shared crossing",
         de: "Der gemeinsame Übergang",

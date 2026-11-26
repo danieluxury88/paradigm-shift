@@ -4,8 +4,8 @@
 use bevy::prelude::*;
 
 use crate::AppState;
+use crate::campaign::{Campaign, Current, Progress};
 use crate::i18n::{Fonts, Language, Ui, ui};
-use crate::level::Levels;
 
 #[derive(Component)]
 struct CardRoot;
@@ -24,12 +24,12 @@ impl Plugin for CardPlugin {
 
 fn spawn_card(
     mut commands: Commands,
-    levels: Res<Levels>,
+    current: Current,
     language: Res<Language>,
     fonts: Res<Fonts>,
 ) {
     let lang = *language;
-    let level = levels.current();
+    let level = &current.level().data;
     let card = &level.card;
     let size = |px: f32| TextFont {
         font_size: FontSize::Px(px),
@@ -38,7 +38,7 @@ fn spawn_card(
     let soft = TextColor(Color::srgb(0.72, 0.74, 0.70));
     let next = ui(
         lang,
-        if levels.is_last() {
+        if current.progress.is_last(&current.campaign) {
             Ui::PlayAgain
         } else {
             Ui::NextLevel
@@ -66,7 +66,7 @@ fn spawn_card(
             },
             children![
                 (
-                    Text::new(level.world.get(lang)),
+                    Text::new(current.world().name.get(lang)),
                     TextFont {
                         font: fonts.bold.clone().into(),
                         ..size(15.0)
@@ -126,7 +126,7 @@ fn rebuild_on_language_change(
     mut commands: Commands,
     language: Res<Language>,
     roots: Query<Entity, With<CardRoot>>,
-    levels: Res<Levels>,
+    current: Current,
     fonts: Res<Fonts>,
 ) {
     if !language.is_changed() || language.is_added() {
@@ -135,16 +135,17 @@ fn rebuild_on_language_change(
     for root in &roots {
         commands.entity(root).despawn();
     }
-    spawn_card(commands, levels, language, fonts);
+    spawn_card(commands, current, language, fonts);
 }
 
 fn continue_on_enter(
     keys: Res<ButtonInput<KeyCode>>,
-    mut levels: ResMut<Levels>,
+    campaign: Res<Campaign>,
+    mut progress: ResMut<Progress>,
     mut next: ResMut<NextState<AppState>>,
 ) {
     if keys.any_just_pressed([KeyCode::Enter, KeyCode::NumpadEnter]) {
-        levels.advance();
+        progress.advance(&campaign);
         next.set(AppState::Playing);
     }
 }

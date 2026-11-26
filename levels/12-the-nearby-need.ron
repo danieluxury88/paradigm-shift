@@ -1,10 +1,5 @@
 // World 3 finale: the traveler balances shared rules with the needs of a person nearby.
 (
-    world: (
-        en: "The Common Ground",
-        de: "Der gemeinsame Grund",
-        es: "El terreno común",
-    ),
     title: (
         en: "The nearby need",
         de: "Das Bedürfnis vor Ort",

@@ -2,11 +2,6 @@
 // 'B' solid only in the second lens, 'S' straw (collapses when stood on),
 // 'P' player start, 'G' goal, '.' empty. Texts: en is required, de and es too (tests check it).
 (
-    world: (
-        en: "The First Crossing",
-        de: "Der erste Übergang",
-        es: "El primer cruce",
-    ),
     title: (
         en: "Two ways of seeing",
         de: "Zwei Arten zu sehen",

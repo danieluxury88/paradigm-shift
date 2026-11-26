@@ -3,11 +3,13 @@
 
 #[cfg(feature = "brp")]
 mod brp;
+mod campaign;
 mod card;
 mod hud;
 mod i18n;
 mod lens;
 mod level;
+mod lives;
 mod player;
 #[cfg(test)]
 mod sim_tests;
@@ -20,13 +22,15 @@ use bevy::prelude::*;
 /// Size of one map cell in world units (pixels at 1:1 zoom).
 pub const TILE: f32 = 32.0;
 
-/// The two screens of the game loop: playing a level, then reading the concept
-/// card that names what the level taught.
+/// The screens of the game loop: playing a level, then reading the concept
+/// card that names what the level taught. `GameOver` opens when the player
+/// runs out of lives, once lives are unlocked.
 #[derive(States, Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum AppState {
     #[default]
     Playing,
     Card,
+    GameOver,
 }
 
 fn main() {
@@ -46,10 +50,12 @@ fn main() {
     .add_plugins((
         // First: it replaces the default font that the other plugins' texts use.
         i18n::I18nPlugin,
+        campaign::CampaignPlugin,
         level::LevelPlugin,
         lens::LensPlugin,
         player::PlayerPlugin,
         hud::HudPlugin,
+        lives::LivesPlugin,
         card::CardPlugin,
         straw::StrawPlugin,
     ))

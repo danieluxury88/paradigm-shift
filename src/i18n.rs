@@ -81,6 +81,10 @@ pub enum Ui {
     NextLevel,
     PlayAgain,
     LanguageKey,
+    OutOfLives,
+    BackToLevel,
+    BackToWorld,
+    TryAgain,
 }
 
 pub fn ui(language: Language, key: Ui) -> &'static str {
@@ -110,6 +114,18 @@ pub fn ui(language: Language, key: Ui) -> &'static str {
         (Ui::LanguageKey, En) => "language",
         (Ui::LanguageKey, De) => "Sprache",
         (Ui::LanguageKey, Es) => "idioma",
+        (Ui::OutOfLives, En) => "Out of lives",
+        (Ui::OutOfLives, De) => "Keine Leben mehr",
+        (Ui::OutOfLives, Es) => "Sin vidas",
+        (Ui::BackToLevel, En) => "This level starts over.",
+        (Ui::BackToLevel, De) => "Dieses Level beginnt von vorn.",
+        (Ui::BackToLevel, Es) => "Este nivel empieza de nuevo.",
+        (Ui::BackToWorld, En) => "Back to the first level of this world.",
+        (Ui::BackToWorld, De) => "Zurück zum ersten Level dieser Welt.",
+        (Ui::BackToWorld, Es) => "Vuelves al primer nivel de este mundo.",
+        (Ui::TryAgain, En) => "try again",
+        (Ui::TryAgain, De) => "nochmal versuchen",
+        (Ui::TryAgain, Es) => "intentarlo de nuevo",
     }
 }
 

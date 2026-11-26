@@ -9,8 +9,10 @@ use bevy::state::app::StatesPlugin;
 use bevy::time::TimeUpdateStrategy;
 
 use crate::AppState;
+use crate::campaign::{Campaign, Progress};
 use crate::lens::ActiveLens;
-use crate::level::{Cell, LevelGrid, Levels};
+use crate::level::{Cell, LevelGrid};
+use crate::lives::Lives;
 use crate::player::Player;
 use crate::solver;
 
@@ -23,14 +25,21 @@ fn game(level: usize) -> App {
         .insert_resource(TimeUpdateStrategy::ManualDuration(FRAME))
         .init_resource::<ButtonInput<KeyCode>>()
         .init_resource::<ClearColor>()
+        // Screens need a language and a bold font; no text is rendered here.
+        .init_resource::<crate::i18n::Language>()
+        .insert_resource(crate::i18n::Fonts {
+            bold: Handle::default(),
+        })
         .init_state::<AppState>()
         .add_plugins((
+            crate::campaign::CampaignPlugin,
             crate::level::LevelPlugin,
             crate::lens::LensPlugin,
             crate::player::PlayerPlugin,
             crate::straw::StrawPlugin,
+            crate::lives::LivesPlugin,
         ));
-    app.world_mut().resource_mut::<Levels>().current = level;
+    app.world_mut().resource_mut::<Progress>().level = level;
     app.update();
     app
 }
@@ -226,7 +235,7 @@ const KNOWN_SINGLE_LENS: &[usize] = &[2, 5, 12];
 /// The core promise of the game: no single lens reaches the goal.
 #[test]
 fn no_level_is_solvable_in_one_lens() {
-    let count = game(0).world().resource::<Levels>().all.len();
+    let count = game(0).world().resource::<Campaign>().levels.len();
     let mut single_lens = Vec::new();
     for level in 0..count {
         let (_, grid, start, delta) = landed_start(level);
@@ -242,8 +251,75 @@ fn no_level_is_solvable_in_one_lens() {
 
 #[test]
 fn every_level_is_solvable() {
-    let count = game(0).world().resource::<Levels>().all.len();
+    let count = game(0).world().resource::<Campaign>().levels.len();
     for level in 0..count {
         assert_solvable(level);
     }
+}
+
+fn state(app: &App) -> AppState {
+    *app.world().resource::<State<AppState>>().get()
+}
+
+fn lives_left(app: &App) -> Option<u32> {
+    app.world().resource::<Lives>().left
+}
+
+/// Moves to another level the way the game does: set the progress, then
+/// re-enter `Playing`.
+fn go_to_level(app: &mut App, level: usize) {
+    app.world_mut().resource_mut::<Progress>().level = level;
+    app.world_mut()
+        .resource_mut::<NextState<AppState>>()
+        .set(AppState::Playing);
+    run(app, 2);
+}
+
+#[test]
+fn lives_unlock_at_level_4() {
+    assert_eq!(lives_left(&game(2)), None, "level 3 has no lives yet");
+    assert_eq!(lives_left(&game(3)), Some(5));
+}
+
+#[test]
+fn restarting_costs_a_life_and_running_out_restarts_the_level_in_world_1() {
+    let mut app = game(3);
+    for expected in (1..5).rev() {
+        tap(&mut app, KeyCode::KeyR);
+        assert_eq!(lives_left(&app), Some(expected));
+    }
+    tap(&mut app, KeyCode::KeyR);
+    run(&mut app, 1);
+    assert_eq!(state(&app), AppState::GameOver);
+
+    tap(&mut app, KeyCode::Enter);
+    run(&mut app, 1);
+    assert_eq!(state(&app), AppState::Playing);
+    assert_eq!(app.world().resource::<Progress>().level, 3);
+    assert_eq!(lives_left(&app), Some(5));
+}
+
+#[test]
+fn running_out_in_world_2_returns_to_its_first_level() {
+    let mut app = game(7);
+    assert_eq!(lives_left(&app), Some(4));
+    for _ in 0..4 {
+        tap(&mut app, KeyCode::KeyR);
+    }
+    run(&mut app, 1);
+    assert_eq!(state(&app), AppState::GameOver);
+    tap(&mut app, KeyCode::Enter);
+    run(&mut app, 1);
+    assert_eq!(app.world().resource::<Progress>().level, 6);
+    assert_eq!(lives_left(&app), Some(4));
+}
+
+#[test]
+fn lives_carry_over_within_a_world_and_refill_in_the_next() {
+    let mut app = game(3);
+    tap(&mut app, KeyCode::KeyR);
+    go_to_level(&mut app, 4);
+    assert_eq!(lives_left(&app), Some(4), "same world keeps the budget");
+    go_to_level(&mut app, 9);
+    assert_eq!(lives_left(&app), Some(3), "a new world refills it");
 }

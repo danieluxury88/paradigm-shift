@@ -15,10 +15,18 @@ Last verified: 2026-11-25
 | ← → or A D | Move |
 | Space, ↑ or W | Jump |
 | SHIFT | Change lens (refused if the other view has a wall where you stand) |
-| R | Restart the level |
+| R | Restart the level (costs a life once lives are unlocked) |
 | L | Change language (English, Deutsch, Español) |
 | ENTER | Continue after a concept card |
 | N | Skip the level (development builds only) |
+
+## The game grows as you play
+
+The first levels are only movement and SHIFT. Further on, the game gains layers, unlocked by levels in `levels/worlds.ron`:
+
+| From level | Feature |
+|---|---|
+| 4 | **Lives.** Each world has a budget of lives shared by its levels; falling or pressing R costs one. Running out restarts the level in the first world and sends you back to the world's first level later on. Later worlds have fewer lives. |
 
 ## Levels
 
@@ -60,8 +68,8 @@ make web     # optimized web build zipped in build/ for itch.io
 ## Adding a level
 
 1. Copy a file in `levels/` and edit it. Map legend: `#` solid in every lens, `A` solid only in the first lens, `B` solid only in the second, `S` straw (looks solid, collapses when stood on), `P` start, `G` goal, `.` empty. All rows must have the same width, with exactly one `P` and one `G`.
-2. Write every text in English (`en`), German (`de`) and Spanish (`es`).
-3. Add it to `LEVEL_FILES` in `src/level.rs`.
+2. Write every text in English (`en`), German (`de`) and Spanish (`es`). The world name lives in `levels/worlds.ron`, not in the level file.
+3. List it in its world in `levels/worlds.ron`, which sets the play order. Files are embedded by `build.rs`, so no Rust code changes; a file missing from the manifest, or listed twice, fails at startup and in `make test`.
 4. Run `make test`: a broken map, a missing translation or an unsolvable level fails there with the file name and the reason. No scripted solution is needed: `src/solver.rs` searches for a route with the game's own physics and `src/sim_tests.rs` replays it in the headless app. A second test checks that the level cannot be solved without SHIFT; levels 2, 5 and 12 still can and are listed in `KNOWN_SINGLE_LENS` until their maps are redesigned.
 
 The player jumps about three tiles high and five tiles far.

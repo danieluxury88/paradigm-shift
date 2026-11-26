@@ -189,7 +189,7 @@ pub fn touches_goal(grid: &LevelGrid, position: Vec2) -> bool {
 }
 
 /// Falling into the void, or pressing R, puts the player back at the start.
-fn respawn_if_fallen(
+pub fn respawn_if_fallen(
     keys: Res<ButtonInput<KeyCode>>,
     grid: Res<LevelGrid>,
     mut query: Query<(&mut Player, &mut Transform)>,
