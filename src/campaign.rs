@@ -25,6 +25,8 @@ const MANIFEST: &str = include_str!("../levels/worlds.ron");
 pub enum Feature {
     /// A per-world budget of lives; falling or restarting costs one.
     Lives,
+    /// A clock for each level, with best times kept in the save.
+    Timer,
 }
 
 /// What running out of lives costs, per world: the challenge grows.
@@ -207,6 +209,9 @@ pub struct Progress {
     pub level: usize,
     #[serde(default)]
     pub profile: Profile,
+    /// Best completion time per level id, in seconds.
+    #[serde(default)]
+    pub best_times: std::collections::BTreeMap<String, f32>,
 }
 
 impl Progress {

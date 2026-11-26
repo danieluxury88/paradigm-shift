@@ -32,6 +32,7 @@ The experience is incremental: the first levels are only movement and SHIFT, and
 | Content | `Campaign` in [src/campaign.rs](../src/campaign.rs) | Worlds and levels in play order, with what each level unlocks; read-only while playing |
 | Player state | `Progress` in [src/campaign.rs](../src/campaign.rs) | The level being played; later the profile and records. Saved with the language by [src/save.rs](../src/save.rs) whenever it changes |
 | Features | One plugin per feature | Systems gated with `run_if(unlocked(Feature::X))` |
+| Card slot | `CardSlot` in [src/card.rs](../src/card.rs) | The same pattern on the concept card: features add a line, such as the level time |
 | HUD slots | `Slot` in [src/hud.rs](../src/hud.rs) | The HUD owns the layout and spawns empty slots; each feature fills its own slot from an `Added<HudSlot>` query, which also covers the rebuild after a language change |
 
 Current schedule:
@@ -40,6 +41,7 @@ Current schedule:
 |---|---|---|
 | 4 | Lives | Per-world budget (5, 4, 3 in the three worlds). Out of lives: restart the level in world 1, back to the world's first level in worlds 2 and 3 (`out_of_lives` in the manifest). Every respawn, fall or R, costs a life. |
 | 5 | Asks the player's name (`ask: Name`) | Fills `{name}` in level texts from then on: the traveler becomes the player. Shown in the HUD's traveler slot. |
+| 7 | Timer | A clock per level, shown in the HUD's timer slot; respawns do not stop it. Only reaching the goal (`LevelCompleted`) records a run, so the development skip key never sets a record. Best times are kept per level id in `Progress::best_times` and shown on the concept card through its `CardSlot`. |
 | 10 | Asks the player's city (`ask: City`) | Fills `{city}`; used in the "Try it" habits of levels 10 and 12, which tie the concept to the player's own surroundings. |
 
 Every screen that leads into a level (card, title, game over) goes through `Progress::level_entry`, which opens the question first when the level asks something the profile does not have yet.

@@ -1,5 +1,7 @@
 //! The concept card shown after a level: it names the idea the level made the
 //! player experience. ENTER continues to the next level; L changes language.
+//! Like the HUD, the card has an empty `CardSlot` where features add a line
+//! (the level time, for example) from an `Added<CardSlot>` query.
 
 use bevy::prelude::*;
 
@@ -9,6 +11,10 @@ use crate::i18n::{Fonts, Language, Ui, ui};
 
 #[derive(Component)]
 struct CardRoot;
+
+/// Marks the node on the concept card where features add their lines.
+#[derive(Component)]
+pub struct CardSlot;
 
 pub struct CardPlugin;
 
@@ -111,6 +117,14 @@ fn spawn_card(
                     )),
                     size(17.0),
                     TextColor(Color::srgb(0.45, 0.80, 0.70)),
+                ),
+                (
+                    CardSlot,
+                    Node {
+                        flex_direction: FlexDirection::Column,
+                        row_gap: Val::Px(6.0),
+                        ..default()
+                    },
                 ),
                 (
                     Text::new(format!(

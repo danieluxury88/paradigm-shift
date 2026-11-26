@@ -52,6 +52,7 @@ fn game_with_store(level: usize, store: Box<dyn crate::save::Store>) -> App {
             crate::lives::LivesPlugin,
             crate::card::CardPlugin,
             crate::prompt::PromptPlugin,
+            crate::timer::TimerPlugin,
         ));
     app.world_mut().resource_mut::<Progress>().level = level;
     app.world_mut()
@@ -186,7 +187,7 @@ fn tap(app: &mut App, key: KeyCode) {
 
 /// Finds a route with the solver, then plays it in the real app: every
 /// plugin, every system order, the same fixed clock.
-fn assert_solvable(level: usize) {
+fn assert_solvable(level: usize) -> App {
     let (mut app, grid, start, delta) = landed_start(level);
     let plan = solver::solve(&grid, start, delta)
         .unwrap_or_else(|| panic!("level {}: the solver found no route", level + 1));
@@ -210,7 +211,7 @@ fn assert_solvable(level: usize) {
             release(&mut app, KeyCode::Space);
             release(&mut app, KeyCode::ShiftLeft);
             if in_card(&app) {
-                return;
+                return app;
             }
         }
         if i + 1 == plan.len() {
@@ -225,6 +226,7 @@ fn assert_solvable(level: usize) {
         level + 1,
         player_position(&mut app)
     );
+    app
 }
 
 /// The start state of a level after the player has landed.
@@ -271,7 +273,7 @@ fn no_level_is_solvable_in_one_lens() {
 fn every_level_is_solvable() {
     let count = game(0).world().resource::<Campaign>().levels.len();
     for level in 0..count {
-        assert_solvable(level);
+        let _ = assert_solvable(level);
     }
 }
 
@@ -424,4 +426,29 @@ fn the_question_is_not_asked_again_once_answered() {
     tap(&mut app, KeyCode::Enter);
     run(&mut app, 1);
     assert_eq!(state(&app), AppState::Playing);
+}
+
+fn best_time(app: &App, level: usize) -> Option<f32> {
+    let id = &app.world().resource::<Campaign>().levels[level].id;
+    app.world()
+        .resource::<Progress>()
+        .best_times
+        .get(id)
+        .copied()
+}
+
+#[test]
+fn the_timer_records_best_times_once_unlocked() {
+    let app = assert_solvable(5);
+    assert_eq!(best_time(&app, 5), None, "level 6 has no timer yet");
+
+    let app = assert_solvable(6);
+    let time = best_time(&app, 6).expect("level 7 records a time");
+    assert!(time > 1.0 && time < 60.0, "plausible time: {time}");
+    let last = app
+        .world()
+        .resource::<crate::timer::LastRun>()
+        .0
+        .expect("a run");
+    assert!(last.is_record());
 }

@@ -97,6 +97,9 @@ pub enum Ui {
     AskCity,
     AskCityWhy,
     Confirm,
+    Time,
+    Best,
+    NewRecord,
 }
 
 pub fn ui(language: Language, key: Ui) -> &'static str {
@@ -174,6 +177,15 @@ pub fn ui(language: Language, key: Ui) -> &'static str {
         (Ui::Confirm, En) => "confirm",
         (Ui::Confirm, De) => "bestätigen",
         (Ui::Confirm, Es) => "confirmar",
+        (Ui::Time, En) => "Time",
+        (Ui::Time, De) => "Zeit",
+        (Ui::Time, Es) => "Tiempo",
+        (Ui::Best, En) => "best",
+        (Ui::Best, De) => "Bestzeit",
+        (Ui::Best, Es) => "mejor",
+        (Ui::NewRecord, En) => "new record!",
+        (Ui::NewRecord, De) => "neuer Rekord!",
+        (Ui::NewRecord, Es) => "¡nuevo récord!",
     }
 }
 

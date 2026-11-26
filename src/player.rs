@@ -37,6 +37,11 @@ pub struct MoveInput {
 #[derive(Message)]
 pub struct Respawned;
 
+/// Sent when the player touches the goal: the level was really solved (the
+/// development skip key does not send it).
+#[derive(Message)]
+pub struct LevelCompleted;
+
 impl Player {
     /// Half width and half height of the player's collision box.
     pub const HALF_SIZE: Vec2 = Vec2::new(11.0, 14.0);
@@ -47,6 +52,7 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_message::<Respawned>()
+            .add_message::<LevelCompleted>()
             .add_systems(
                 OnEnter(AppState::Playing),
                 spawn_player.after(crate::level::spawn_level),
@@ -207,15 +213,17 @@ pub fn respawn_if_fallen(
     }
 }
 
-fn reach_goal(
+pub fn reach_goal(
     grid: Res<LevelGrid>,
     query: Query<&Transform, With<Player>>,
     mut next: ResMut<NextState<AppState>>,
+    mut completed: MessageWriter<LevelCompleted>,
 ) {
     let Ok(transform) = query.single() else {
         return;
     };
     if touches_goal(&grid, transform.translation.truncate()) {
+        completed.write(LevelCompleted);
         next.set(AppState::Card);
     }
 }

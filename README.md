@@ -29,6 +29,7 @@ The first levels are only movement and SHIFT. Further on, the game gains layers,
 |---|---|
 | 4 | **Lives.** Each world has a budget of lives shared by its levels; falling or pressing R costs one. Running out restarts the level in the first world and sends you back to the world's first level later on. Later worlds have fewer lives. |
 | 5 | **Your name.** The game asks for it; from then on it appears in the HUD and in the stories on the concept cards. |
+| 7 | **The clock.** Each level is timed; falls do not stop it. The concept card shows your time and your best, which is saved. |
 | 10 | **Your city.** The "Try it" habits on the concept cards point back to it. |
 
 ### Saving

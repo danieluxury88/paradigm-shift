@@ -38,7 +38,7 @@
             lives: 4,
             out_of_lives: RestartWorld,
             levels: [
-                (file: "07-signal-and-noise"),
+                (file: "07-signal-and-noise", unlocks: [Timer]),
                 (file: "08-the-silent-reply"),
                 (file: "09-a-fair-reading"),
             ],

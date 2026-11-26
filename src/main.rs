@@ -18,6 +18,7 @@ mod sim_tests;
 #[cfg(test)]
 mod solver;
 mod straw;
+mod timer;
 mod title;
 
 use bevy::prelude::*;
@@ -66,6 +67,7 @@ fn main() {
         hud::HudPlugin,
         lives::LivesPlugin,
         prompt::PromptPlugin,
+        timer::TimerPlugin,
         card::CardPlugin,
         straw::StrawPlugin,
     ))
