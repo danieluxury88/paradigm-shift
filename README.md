@@ -19,6 +19,7 @@ Last verified: 2026-11-25
 | L | Change language (English, Deutsch, Español) |
 | ENTER | Continue after a concept card |
 | N | Skip the level (development builds only) |
+| BACKSPACE | On the title screen: start a new game instead of continuing |
 
 ## The game grows as you play
 
@@ -27,6 +28,10 @@ The first levels are only movement and SHIFT. Further on, the game gains layers,
 | From level | Feature |
 |---|---|
 | 4 | **Lives.** Each world has a budget of lives shared by its levels; falling or pressing R costs one. Running out restarts the level in the first world and sends you back to the world's first level later on. Later worlds have fewer lives. |
+
+### Saving
+
+Progress and the chosen language are saved automatically: in the browser's `localStorage` on the web build, in `save.ron` under the platform's data folder natively (`~/.local/share/paradigm-shift/` on Linux, `%APPDATA%\paradigm-shift\` on Windows, `~/Library/Application Support/paradigm-shift/` on macOS). The title screen offers to continue, or BACKSPACE starts over. A save from an older, incompatible version is ignored.
 
 ## Levels
 

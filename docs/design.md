@@ -30,7 +30,7 @@ The experience is incremental: the first levels are only movement and SHIFT, and
 | Layer | Where | What it holds |
 |---|---|---|
 | Content | `Campaign` in [src/campaign.rs](../src/campaign.rs) | Worlds and levels in play order, with what each level unlocks; read-only while playing |
-| Player state | `Progress` in [src/campaign.rs](../src/campaign.rs) | The level being played; later the profile and records, which is what gets saved |
+| Player state | `Progress` in [src/campaign.rs](../src/campaign.rs) | The level being played; later the profile and records. Saved with the language by [src/save.rs](../src/save.rs) whenever it changes |
 | Features | One plugin per feature | Systems gated with `run_if(unlocked(Feature::X))` |
 | HUD slots | `Slot` in [src/hud.rs](../src/hud.rs) | The HUD owns the layout and spawns empty slots; each feature fills its own slot from an `Added<HudSlot>` query, which also covers the rebuild after a language change |
 

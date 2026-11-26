@@ -14,12 +14,18 @@ use crate::lens::ActiveLens;
 use crate::level::{Cell, LevelGrid};
 use crate::lives::Lives;
 use crate::player::Player;
+use crate::save::Store;
 use crate::solver;
 
 const FRAME: Duration = Duration::from_micros(16_667);
 
 /// A game without rendering, starting at the given level (0-based).
 fn game(level: usize) -> App {
+    game_with_store(level, Box::new(crate::save::MemoryStore::default()))
+}
+
+/// Like `game`, with the save kept in the given store.
+fn game_with_store(level: usize, store: Box<dyn crate::save::Store>) -> App {
     let mut app = App::new();
     app.add_plugins((MinimalPlugins, StatesPlugin))
         .insert_resource(TimeUpdateStrategy::ManualDuration(FRAME))
@@ -31,8 +37,10 @@ fn game(level: usize) -> App {
             bold: Handle::default(),
         })
         .init_state::<AppState>()
+        .insert_resource(crate::save::SaveStore(store))
         .add_plugins((
             crate::campaign::CampaignPlugin,
+            crate::save::SavePlugin,
             crate::level::LevelPlugin,
             crate::lens::LensPlugin,
             crate::player::PlayerPlugin,
@@ -40,6 +48,10 @@ fn game(level: usize) -> App {
             crate::lives::LivesPlugin,
         ));
     app.world_mut().resource_mut::<Progress>().level = level;
+    app.world_mut()
+        .resource_mut::<NextState<AppState>>()
+        .set(AppState::Playing);
+    app.update();
     app.update();
     app
 }
@@ -322,4 +334,23 @@ fn lives_carry_over_within_a_world_and_refill_in_the_next() {
     assert_eq!(lives_left(&app), Some(4), "same world keeps the budget");
     go_to_level(&mut app, 9);
     assert_eq!(lives_left(&app), Some(3), "a new world refills it");
+}
+
+#[test]
+fn progress_is_saved_and_restored_in_the_next_session() {
+    let store = std::sync::Arc::new(crate::save::MemoryStore::default());
+    let mut first = game_with_store(0, Box::new(store.clone()));
+    assert!(store.load().is_none(), "loading alone writes nothing");
+    go_to_level(&mut first, 5);
+    assert!(store.load().is_some(), "the new level was saved");
+
+    // A new session: build without forcing a level, as the real game does.
+    let mut second = App::new();
+    second
+        .add_plugins((MinimalPlugins, StatesPlugin))
+        .init_resource::<crate::i18n::Language>()
+        .insert_resource(crate::save::SaveStore(Box::new(store)))
+        .add_plugins((crate::campaign::CampaignPlugin, crate::save::SavePlugin));
+    assert_eq!(second.world().resource::<Progress>().level, 5);
+    assert!(second.world().resource::<crate::save::SaveFound>().0);
 }

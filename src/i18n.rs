@@ -5,12 +5,12 @@
 
 use bevy::prelude::*;
 use bevy::text::Font;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 const FONT_REGULAR: &[u8] = include_bytes!("../assets/fonts/AtkinsonHyperlegible-Regular.ttf");
 const FONT_BOLD: &[u8] = include_bytes!("../assets/fonts/AtkinsonHyperlegible-Bold.ttf");
 
-#[derive(Resource, Debug, Default, Clone, Copy, PartialEq, Eq)]
+#[derive(Resource, Debug, Default, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Language {
     #[default]
     En,
@@ -85,6 +85,11 @@ pub enum Ui {
     BackToLevel,
     BackToWorld,
     TryAgain,
+    Tagline,
+    Start,
+    Continue,
+    NewGame,
+    Level,
 }
 
 pub fn ui(language: Language, key: Ui) -> &'static str {
@@ -126,6 +131,21 @@ pub fn ui(language: Language, key: Ui) -> &'static str {
         (Ui::TryAgain, En) => "try again",
         (Ui::TryAgain, De) => "nochmal versuchen",
         (Ui::TryAgain, Es) => "intentarlo de nuevo",
+        (Ui::Tagline, En) => "The same world, seen through different eyes.",
+        (Ui::Tagline, De) => "Dieselbe Welt, mit anderen Augen gesehen.",
+        (Ui::Tagline, Es) => "El mismo mundo, visto con otros ojos.",
+        (Ui::Start, En) => "start",
+        (Ui::Start, De) => "starten",
+        (Ui::Start, Es) => "empezar",
+        (Ui::Continue, En) => "continue",
+        (Ui::Continue, De) => "weiterspielen",
+        (Ui::Continue, Es) => "continuar",
+        (Ui::NewGame, En) => "new game",
+        (Ui::NewGame, De) => "neues Spiel",
+        (Ui::NewGame, Es) => "partida nueva",
+        (Ui::Level, En) => "level",
+        (Ui::Level, De) => "Level",
+        (Ui::Level, Es) => "nivel",
     }
 }
 

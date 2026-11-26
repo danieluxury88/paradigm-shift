@@ -13,6 +13,10 @@ serde = { version = "1.0.229", features = ["derive"] }
 # Remote control for coding agents (BRP), only with the `brp` feature. No gamepad support needed.
 bevy_brp_extras = { version = "0.23.0", optional = true, default-features = false, features = ["diagnostics", "ui"] }
 
+# Browser localStorage for the save, web build only. Same version Bevy already pulls in.
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+web-sys = { version = "0.3.107", features = ["Window", "Storage"] }
+
 [features]
 # Faster incremental native builds while developing (`make run`). Never use it for release or web builds.
 dev = ["bevy/dynamic_linking"]

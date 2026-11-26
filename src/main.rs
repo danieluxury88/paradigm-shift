@@ -11,23 +11,26 @@ mod lens;
 mod level;
 mod lives;
 mod player;
+mod save;
 #[cfg(test)]
 mod sim_tests;
 #[cfg(test)]
 mod solver;
 mod straw;
+mod title;
 
 use bevy::prelude::*;
 
 /// Size of one map cell in world units (pixels at 1:1 zoom).
 pub const TILE: f32 = 32.0;
 
-/// The screens of the game loop: playing a level, then reading the concept
-/// card that names what the level taught. `GameOver` opens when the player
-/// runs out of lives, once lives are unlocked.
+/// The screens of the game: the title, then the loop of playing a level and
+/// reading the concept card that names what the level taught. `GameOver`
+/// opens when the player runs out of lives, once lives are unlocked.
 #[derive(States, Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum AppState {
     #[default]
+    Title,
     Playing,
     Card,
     GameOver,
@@ -51,6 +54,9 @@ fn main() {
         // First: it replaces the default font that the other plugins' texts use.
         i18n::I18nPlugin,
         campaign::CampaignPlugin,
+        // After the campaign and the language: the save restores both.
+        save::SavePlugin,
+        title::TitlePlugin,
         level::LevelPlugin,
         lens::LensPlugin,
         player::PlayerPlugin,

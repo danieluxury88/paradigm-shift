@@ -8,7 +8,7 @@
 //! grows as the player advances without the plugins knowing about levels.
 
 use bevy::prelude::*;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::i18n::Tr;
 use crate::level::{LevelData, LevelGrid};
@@ -160,8 +160,9 @@ impl Campaign {
     }
 }
 
-/// The player's state across levels: what gets saved between sessions.
-#[derive(Resource, Debug, Default, Clone, PartialEq)]
+/// The player's state across levels: what gets saved between sessions
+/// (see `save.rs`). New fields need `#[serde(default)]` so older saves load.
+#[derive(Resource, Debug, Default, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Progress {
     /// Index into `Campaign::levels` of the level being played.
     pub level: usize,
