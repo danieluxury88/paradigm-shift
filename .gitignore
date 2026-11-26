@@ -1,3 +1,6 @@
 /target
 /dist
 /build
+
+# Local planning file, kept in step with SD App by dev-core.
+/TASKS.md

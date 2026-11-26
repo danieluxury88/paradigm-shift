@@ -60,7 +60,10 @@ impl Plugin for LensPlugin {
             .add_systems(OnEnter(AppState::Playing), reset_lens)
             .add_systems(
                 Update,
-                (switch_lens, paint_tiles)
+                // SHIFT is applied before movement, so the frame's physics
+                // always uses the lens the player asked for; the solver
+                // relies on this order.
+                (switch_lens.before(crate::player::move_player), paint_tiles)
                     .chain()
                     .run_if(in_state(AppState::Playing)),
             );
@@ -84,13 +87,19 @@ fn switch_lens(
     let Ok(transform) = player.single() else {
         return;
     };
-    let next = lens.0.other();
-    // Rule: you cannot shift into a wall. The other view has to have room for you.
-    if grid.overlaps_solid(transform.translation.truncate(), Player::HALF_SIZE, next) {
-        blocked.write(ShiftBlocked);
-        return;
+    match try_shift(&grid, transform.translation.truncate(), lens.0) {
+        Some(next) => lens.0 = next,
+        None => {
+            blocked.write(ShiftBlocked);
+        }
     }
-    lens.0 = next;
+}
+
+/// The lens after a SHIFT at `position`, or `None` if it is refused.
+/// Rule: you cannot shift into a wall. The other view has to have room for you.
+pub fn try_shift(grid: &LevelGrid, position: Vec2, current: Lens) -> Option<Lens> {
+    let next = current.other();
+    (!grid.overlaps_solid(position, Player::HALF_SIZE, next)).then_some(next)
 }
 
 /// Recolours tiles and the background whenever the active lens changes.

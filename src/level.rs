@@ -164,7 +164,7 @@ impl Levels {
 
 /// The current level as a grid of cells, for fast collision lookups.
 /// Row 0 is the top of the map, as written in the file.
-#[derive(Resource, Default)]
+#[derive(Resource, Default, Clone)]
 pub struct LevelGrid {
     pub cells: Vec<Vec<Cell>>,
     /// The cells as loaded, to undo collapses when the player respawns.
@@ -174,7 +174,7 @@ pub struct LevelGrid {
 }
 
 impl LevelGrid {
-    fn parse(map: &[String]) -> Result<LevelGrid, String> {
+    pub fn parse(map: &[String]) -> Result<LevelGrid, String> {
         let width = map.first().map(|row| row.chars().count()).unwrap_or(0);
         let mut cells = Vec::with_capacity(map.len());
         for (index, row) in map.iter().enumerate() {

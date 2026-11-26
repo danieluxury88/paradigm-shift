@@ -11,6 +11,8 @@ mod level;
 mod player;
 #[cfg(test)]
 mod sim_tests;
+#[cfg(test)]
+mod solver;
 mod straw;
 
 use bevy::prelude::*;

@@ -9,8 +9,10 @@ use bevy::state::app::StatesPlugin;
 use bevy::time::TimeUpdateStrategy;
 
 use crate::AppState;
+use crate::lens::ActiveLens;
 use crate::level::{Cell, LevelGrid, Levels};
 use crate::player::Player;
+use crate::solver;
 
 const FRAME: Duration = Duration::from_micros(16_667);
 
@@ -145,52 +147,6 @@ fn straw_collapses_under_the_player_and_returns_after_respawn() {
     );
 }
 
-#[test]
-fn straw_level_is_solvable_on_the_stepping_stones() {
-    let mut app = game(2);
-    run(&mut app, 30);
-    // Switch to "Understand the other", where the stepping stones are solid.
-    hold(&mut app, KeyCode::ShiftLeft);
-    run(&mut app, 1);
-    release(&mut app, KeyCode::ShiftLeft);
-
-    // Run right and jump at each stone: a simple scripted player.
-    hold(&mut app, KeyCode::ArrowRight);
-    for frame in 0..600 {
-        if frame % 20 == 0 {
-            hold(&mut app, KeyCode::Space);
-        }
-        run(&mut app, 1);
-        release(&mut app, KeyCode::Space);
-        if *app.world().resource::<State<AppState>>().get() == AppState::Card {
-            return;
-        }
-    }
-    panic!(
-        "did not reach the goal; ended at {}",
-        player_position(&mut app)
-    );
-}
-
-/// One step of a scripted solution.
-enum Step {
-    /// Walk right until x reaches the value, then press SHIFT.
-    ShiftAt(f32),
-    /// Walk right until x reaches `takeoff` while on the ground, jump (and
-    /// SHIFT right after takeoff if `shift`), keep right for `air` frames,
-    /// then wait to land.
-    Hop {
-        takeoff: f32,
-        air: usize,
-        shift: bool,
-    },
-}
-
-fn on_ground(app: &mut App) -> bool {
-    let mut query = app.world_mut().query::<&Player>();
-    query.single(app.world()).expect("one player").on_ground
-}
-
 fn in_card(app: &App) -> bool {
     *app.world().resource::<State<AppState>>().get() == AppState::Card
 }
@@ -201,148 +157,93 @@ fn tap(app: &mut App, key: KeyCode) {
     release(app, key);
 }
 
-/// Plays a level with a script, then walks right; panics with the step and
-/// position if the goal is not reached.
-fn solve(level: usize, script: &[Step]) {
-    let mut app = game(level);
-    run(&mut app, 30);
-    let walk_until = |app: &mut App, x: f32, need_ground: bool, what: &str| {
-        hold(app, KeyCode::ArrowRight);
-        for _ in 0..600 {
-            let p = player_position(app);
-            if p.x >= x && (!need_ground || on_ground(app)) {
+/// Finds a route with the solver, then plays it in the real app: every
+/// plugin, every system order, the same fixed clock.
+fn assert_solvable(level: usize) {
+    let (mut app, grid, start, delta) = landed_start(level);
+    let plan = solver::solve(&grid, start, delta)
+        .unwrap_or_else(|| panic!("level {}: the solver found no route", level + 1));
+
+    for (i, action) in plan.iter().enumerate() {
+        release(&mut app, KeyCode::ArrowLeft);
+        release(&mut app, KeyCode::ArrowRight);
+        match action.direction {
+            1 => hold(&mut app, KeyCode::ArrowRight),
+            -1 => hold(&mut app, KeyCode::ArrowLeft),
+            _ => {}
+        }
+        if action.jump {
+            hold(&mut app, KeyCode::Space);
+        }
+        if action.shift {
+            hold(&mut app, KeyCode::ShiftLeft);
+        }
+        for _ in 0..solver::FRAMES_PER_ACTION {
+            run(&mut app, 1);
+            release(&mut app, KeyCode::Space);
+            release(&mut app, KeyCode::ShiftLeft);
+            if in_card(&app) {
                 return;
             }
-            run(app, 1);
         }
-        panic!(
-            "level {}: never reached {what} at x={x}, stuck at {}",
-            level + 1,
-            player_position(app)
-        );
-    };
-    for (i, step) in script.iter().enumerate() {
-        match *step {
-            Step::ShiftAt(x) => {
-                walk_until(&mut app, x, false, &format!("step {i} (shift)"));
-                tap(&mut app, KeyCode::ShiftLeft);
-            }
-            Step::Hop {
-                takeoff,
-                air,
-                shift,
-            } => {
-                walk_until(&mut app, takeoff, true, &format!("step {i} (takeoff)"));
-                tap(&mut app, KeyCode::Space);
-                if shift {
-                    tap(&mut app, KeyCode::ShiftLeft);
-                }
-                run(&mut app, air);
-                release(&mut app, KeyCode::ArrowRight);
-                for _ in 0..120 {
-                    run(&mut app, 1);
-                    if on_ground(&mut app) {
-                        break;
-                    }
-                }
-                let p = player_position(&mut app);
-                assert!(
-                    p.y > app.world().resource::<LevelGrid>().bottom(),
-                    "level {}: fell at step {i} ({p})",
-                    level + 1
-                );
-            }
+        if i + 1 == plan.len() {
+            // Touching the goal sets the next state, which applies at the
+            // start of the following update.
+            run(&mut app, 1);
         }
     }
-    hold(&mut app, KeyCode::ArrowRight);
-    for _ in 0..600 {
-        if in_card(&app) {
-            return;
-        }
-        run(&mut app, 1);
-    }
-    panic!(
-        "level {}: goal not reached, ended at {}",
+    assert!(
+        in_card(&app),
+        "level {}: the replayed route missed the goal, ended at {}",
         level + 1,
         player_position(&mut app)
     );
 }
 
+/// The start state of a level after the player has landed.
+/// A level after the player has landed, with what the solver needs: the
+/// grid, the exact start state and the frame time the app uses.
+fn landed_start(level: usize) -> (App, LevelGrid, solver::State, f32) {
+    let mut app = game(level);
+    run(&mut app, 30);
+    let mut query = app.world_mut().query::<(&Player, &Transform)>();
+    let (player, transform) = query.single(app.world()).expect("one player");
+    let state = solver::State {
+        position: transform.translation.truncate(),
+        player: player.clone(),
+        lens: app.world().resource::<ActiveLens>().0,
+    };
+    let delta = app.world().resource::<Time>().delta_secs();
+    let grid = app.world().resource::<LevelGrid>().clone();
+    (app, grid, state, delta)
+}
+
+/// Levels (1-based) known to be solvable in one lens. Their maps still need a
+/// redesign; the list keeps new levels from breaking the promise while that
+/// is pending. Remove a level from here once its map needs SHIFT.
+const KNOWN_SINGLE_LENS: &[usize] = &[2, 5, 12];
+
+/// The core promise of the game: no single lens reaches the goal.
 #[test]
-fn level_1_is_solvable() {
-    solve(
-        0,
-        &[
-            Step::ShiftAt(-48.0),
-            Step::Hop {
-                takeoff: 90.0,
-                air: 19,
-                shift: false,
-            },
-            Step::Hop {
-                takeoff: 180.0,
-                air: 33,
-                shift: false,
-            },
-        ],
+fn no_level_is_solvable_in_one_lens() {
+    let count = game(0).world().resource::<Levels>().all.len();
+    let mut single_lens = Vec::new();
+    for level in 0..count {
+        let (_, grid, start, delta) = landed_start(level);
+        if solver::solve_without_shift(&grid, start, delta).is_some() {
+            single_lens.push(level + 1);
+        }
+    }
+    assert_eq!(
+        single_lens, KNOWN_SINGLE_LENS,
+        "levels solvable without SHIFT (update KNOWN_SINGLE_LENS only after a map change)"
     );
 }
 
 #[test]
-fn level_2_is_solvable() {
-    solve(
-        1,
-        &[
-            Step::Hop {
-                takeoff: -300.0,
-                air: 21,
-                shift: false,
-            },
-            Step::Hop {
-                takeoff: -200.0,
-                air: 20,
-                shift: true,
-            },
-            Step::Hop {
-                takeoff: -104.0,
-                air: 20,
-                shift: true,
-            },
-            Step::Hop {
-                takeoff: -8.0,
-                air: 20,
-                shift: true,
-            },
-            Step::Hop {
-                takeoff: 88.0,
-                air: 20,
-                shift: true,
-            },
-            Step::Hop {
-                takeoff: 184.0,
-                air: 20,
-                shift: true,
-            },
-        ],
-    );
-}
-
-#[test]
-fn level_4_is_solvable() {
-    solve(
-        3,
-        &[
-            Step::ShiftAt(-440.0),
-            Step::Hop {
-                takeoff: -10.0,
-                air: 20,
-                shift: false,
-            },
-            Step::Hop {
-                takeoff: 85.0,
-                air: 20,
-                shift: false,
-            },
-        ],
-    );
+fn every_level_is_solvable() {
+    let count = game(0).world().resource::<Levels>().all.len();
+    for level in 0..count {
+        assert_solvable(level);
+    }
 }

@@ -7,7 +7,7 @@
 use bevy::prelude::*;
 
 use crate::AppState;
-use crate::lens::ActiveLens;
+use crate::lens::{ActiveLens, Lens};
 use crate::level::{Cell, LevelGrid};
 
 const RUN_SPEED: f32 = 220.0;
@@ -15,11 +15,21 @@ const JUMP_SPEED: f32 = 520.0;
 const GRAVITY: f32 = 1400.0;
 const MAX_FALL_SPEED: f32 = 900.0;
 
-#[derive(Component, Default, Reflect)]
+#[derive(Component, Default, Clone, Reflect)]
 #[reflect(Component)]
 pub struct Player {
-    velocity: Vec2,
+    pub velocity: Vec2,
     pub on_ground: bool,
+}
+
+/// What the player is asking for during one frame. Kept separate from the
+/// keyboard so the same physics can be driven by tests and the solver.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct MoveInput {
+    /// -1 left, 0 none, 1 right.
+    pub direction: i8,
+    /// Jump was pressed this frame (not held).
+    pub jump: bool,
 }
 
 /// Sent when the player is put back at the start (fall or R), so other
@@ -70,31 +80,53 @@ pub fn move_player(
     let Ok((mut player, mut transform)) = query.single_mut() else {
         return;
     };
-    // Cap the time step so a slow frame cannot make the player skip through a tile.
-    let dt = time.delta_secs().min(1.0 / 30.0);
-
     let left = keys.any_pressed([KeyCode::ArrowLeft, KeyCode::KeyA]);
     let right = keys.any_pressed([KeyCode::ArrowRight, KeyCode::KeyD]);
-    player.velocity.x = match (left, right) {
-        (true, false) => -RUN_SPEED,
-        (false, true) => RUN_SPEED,
-        _ => 0.0,
+    let input = MoveInput {
+        direction: match (left, right) {
+            (true, false) => -1,
+            (false, true) => 1,
+            _ => 0,
+        },
+        jump: keys.any_just_pressed([KeyCode::Space, KeyCode::ArrowUp, KeyCode::KeyW]),
     };
+    let mut position = transform.translation.truncate();
+    step(
+        &mut position,
+        &mut player,
+        input,
+        &grid,
+        lens.0,
+        time.delta_secs(),
+    );
+    transform.translation = position.extend(transform.translation.z);
+}
 
-    let jump = keys.any_just_pressed([KeyCode::Space, KeyCode::ArrowUp, KeyCode::KeyW]);
-    if jump && player.on_ground {
+/// One frame of movement physics: pure, so the game, the tests and the level
+/// solver all share exactly the same rules.
+pub fn step(
+    position: &mut Vec2,
+    player: &mut Player,
+    input: MoveInput,
+    grid: &LevelGrid,
+    lens: Lens,
+    delta: f32,
+) {
+    // Cap the time step so a slow frame cannot make the player skip through a tile.
+    let dt = delta.min(1.0 / 30.0);
+
+    player.velocity.x = RUN_SPEED * f32::from(input.direction);
+    if input.jump && player.on_ground {
         player.velocity.y = JUMP_SPEED;
     }
     player.velocity.y = (player.velocity.y - GRAVITY * dt).max(-MAX_FALL_SPEED);
-
-    let mut position = transform.translation.truncate();
 
     // Horizontal pass.
     let horizontal_direction = player.velocity.x;
     position.x += horizontal_direction * dt;
     let mut horizontal_collision: Option<f32> = None;
-    for (col, row, cell) in grid.cells_in_box(position, Player::HALF_SIZE) {
-        if !cell.is_solid_in(lens.0) {
+    for (col, row, cell) in grid.cells_in_box(*position, Player::HALF_SIZE) {
+        if !cell.is_solid_in(lens) {
             continue;
         }
         let tile = grid.cell_center(col, row);
@@ -121,8 +153,8 @@ pub fn move_player(
     let horizontal_position = position.x;
     position.y += player.velocity.y * dt;
     player.on_ground = false;
-    for (col, row, cell) in grid.cells_in_box(position, Player::HALF_SIZE) {
-        if !cell.is_solid_in(lens.0) {
+    for (col, row, cell) in grid.cells_in_box(*position, Player::HALF_SIZE) {
+        if !cell.is_solid_in(lens) {
             continue;
         }
         let tile = grid.cell_center(col, row);
@@ -147,8 +179,13 @@ pub fn move_player(
             player.velocity.x = 0.0;
         }
     }
+}
 
-    transform.translation = position.extend(transform.translation.z);
+/// True when a player box at `position` touches the goal.
+pub fn touches_goal(grid: &LevelGrid, position: Vec2) -> bool {
+    grid.cells_in_box(position, Player::HALF_SIZE)
+        .iter()
+        .any(|&(_, _, cell)| cell == Cell::Goal)
 }
 
 /// Falling into the void, or pressing R, puts the player back at the start.
@@ -178,11 +215,7 @@ fn reach_goal(
     let Ok(transform) = query.single() else {
         return;
     };
-    let touching_goal = grid
-        .cells_in_box(transform.translation.truncate(), Player::HALF_SIZE)
-        .iter()
-        .any(|&(_, _, cell)| cell == Cell::Goal);
-    if touching_goal {
+    if touches_goal(&grid, transform.translation.truncate()) {
         next.set(AppState::Card);
     }
 }

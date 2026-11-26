@@ -6,7 +6,7 @@ The longer-term story follows one traveler across multiple worlds, entering the 
 
 Made in Rust with [Bevy](https://bevyengine.org) for [GitHub Game Off 2026](https://itch.io/jam/game-off-2026) (theme: SHIFT). Playable in English, German and Spanish.
 
-Last verified: 2026-11-23
+Last verified: 2026-11-25
 
 ## Controls
 
@@ -45,7 +45,7 @@ Requirements: Rust (stable, via rustup) with the `wasm32-unknown-unknown` target
 
 ```bash
 make run     # play natively in a window
-make test    # unit and simulation tests: maps, translations, and a bot that solves every level
+make test    # unit and simulation tests: maps, translations, and a solver that plays every level
 make check   # fmt, clippy and tests
 make serve   # web build with live reload at http://127.0.0.1:8080
 make web     # optimized web build zipped in build/ for itch.io
@@ -62,8 +62,7 @@ make web     # optimized web build zipped in build/ for itch.io
 1. Copy a file in `levels/` and edit it. Map legend: `#` solid in every lens, `A` solid only in the first lens, `B` solid only in the second, `S` straw (looks solid, collapses when stood on), `P` start, `G` goal, `.` empty. All rows must have the same width, with exactly one `P` and one `G`.
 2. Write every text in English (`en`), German (`de`) and Spanish (`es`).
 3. Add it to `LEVEL_FILES` in `src/level.rs`.
-4. Add a scripted solution to `src/sim_tests.rs` (see `level_1_is_solvable`): a headless bot plays the level and the test fails if it cannot reach the goal.
-5. Run `make test`: a broken map, a missing translation or an unsolvable level fails there with the file name and the reason.
+4. Run `make test`: a broken map, a missing translation or an unsolvable level fails there with the file name and the reason. No scripted solution is needed: `src/solver.rs` searches for a route with the game's own physics and `src/sim_tests.rs` replays it in the headless app. A second test checks that the level cannot be solved without SHIFT; levels 2, 5 and 12 still can and are listed in `KNOWN_SINGLE_LENS` until their maps are redesigned.
 
 The player jumps about three tiles high and five tiles far.
 
