@@ -101,6 +101,9 @@ pub enum Ui {
     Best,
     NewRecord,
     Sound,
+    Journal,
+    Concepts,
+    Back,
 }
 
 pub fn ui(language: Language, key: Ui) -> &'static str {
@@ -190,6 +193,15 @@ pub fn ui(language: Language, key: Ui) -> &'static str {
         (Ui::Sound, En) => "sound",
         (Ui::Sound, De) => "Ton",
         (Ui::Sound, Es) => "sonido",
+        (Ui::Journal, En) => "journal",
+        (Ui::Journal, De) => "Tagebuch",
+        (Ui::Journal, Es) => "diario",
+        (Ui::Concepts, En) => "concepts collected",
+        (Ui::Concepts, De) => "gesammelte Konzepte",
+        (Ui::Concepts, Es) => "conceptos reunidos",
+        (Ui::Back, En) => "back",
+        (Ui::Back, De) => "zurück",
+        (Ui::Back, Es) => "volver",
     }
 }
 

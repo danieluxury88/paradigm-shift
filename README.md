@@ -18,6 +18,7 @@ Last verified: 2026-11-25
 | R | Restart the level (costs a life once lives are unlocked) |
 | L | Change language (English, Deutsch, Español) |
 | M | Sound off / on (remembered) |
+| J | Open the journal of collected concepts, from a concept card or the title screen (once unlocked) |
 | ENTER | Continue after a concept card |
 | N | Skip the level (development builds only) |
 | BACKSPACE | On the title screen: start a new game instead of continuing |
@@ -29,6 +30,7 @@ The first levels are only movement and SHIFT. Further on, the game gains layers,
 | From level | Feature |
 |---|---|
 | 2 | **Music.** Each world has its own loop, in two versions that share the harmony: SHIFT crossfades between them, so you hear the same song through the other lens too. Sound effects play from the first level. |
+| 3 | **The journal.** Every concept you collect is kept; press J on a concept card or the title screen to reread any of them. |
 | 4 | **Lives.** Each world has a budget of lives shared by its levels; falling or pressing R costs one. Running out restarts the level in the first world and sends you back to the world's first level later on. Later worlds have fewer lives. |
 | 5 | **Your name.** The game asks for it; from then on it appears in the HUD and in the stories on the concept cards. |
 | 7 | **The clock.** Each level is timed; falls do not stop it. The concept card shows your time and your best, which is saved. |

@@ -8,6 +8,7 @@ mod campaign;
 mod card;
 mod hud;
 mod i18n;
+mod journal;
 mod lens;
 mod level;
 mod lives;
@@ -40,6 +41,8 @@ pub enum AppState {
     GameOver,
     /// A question before a level (the player's name, their city).
     Prompt,
+    /// The concepts collected so far, opened from the card or the title.
+    Journal,
 }
 
 fn main() {
@@ -71,6 +74,7 @@ fn main() {
         prompt::PromptPlugin,
         timer::TimerPlugin,
         audio::AudioPlugin,
+        journal::JournalPlugin,
         card::CardPlugin,
         straw::StrawPlugin,
     ))

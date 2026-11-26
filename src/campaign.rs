@@ -29,6 +29,8 @@ pub enum Feature {
     Timer,
     /// Each world's music, in two versions that SHIFT crossfades.
     Music,
+    /// A journal of the concepts collected so far, opened with J.
+    Journal,
 }
 
 /// What running out of lives costs, per world: the challenge grows.
@@ -214,6 +216,9 @@ pub struct Progress {
     /// Best completion time per level id, in seconds.
     #[serde(default)]
     pub best_times: std::collections::BTreeMap<String, f32>,
+    /// Ids of the levels solved at least once: the concepts collected.
+    #[serde(default)]
+    pub completed: std::collections::BTreeSet<String>,
 }
 
 impl Progress {
@@ -302,6 +307,20 @@ pub fn fill(text: &str, profile: &Profile, language: Language) -> String {
 #[cfg(test)]
 const PLACEHOLDERS: [&str; 2] = ["{name}", "{city}"];
 
+/// Remembers every solved level: its concept goes into the journal.
+fn record_completion(
+    mut completed: MessageReader<crate::player::LevelCompleted>,
+    campaign: Res<Campaign>,
+    mut progress: ResMut<Progress>,
+) {
+    if completed.read().count() > 0 {
+        let id = campaign.levels[progress.level].id.clone();
+        if !progress.completed.contains(&id) {
+            progress.completed.insert(id);
+        }
+    }
+}
+
 /// Run condition: the feature is unlocked at the level being played.
 pub fn unlocked(feature: Feature) -> impl Fn(Res<Campaign>, Res<Progress>) -> bool + Clone {
     move |campaign: Res<Campaign>, progress: Res<Progress>| {
@@ -314,7 +333,13 @@ pub struct CampaignPlugin;
 impl Plugin for CampaignPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(Campaign::load())
-            .init_resource::<Progress>();
+            .init_resource::<Progress>()
+            .add_systems(
+                Update,
+                record_completion
+                    .after(crate::player::reach_goal)
+                    .run_if(in_state(AppState::Playing)),
+            );
     }
 }
 

@@ -21,6 +21,7 @@ Last verified: 2026-11-25
 | 7d | `src/prompt.rs` | `match` with guards on an enum from another crate (`Key`), `chars().count()` vs `len()` for accented text, `String::pop` | reading raw `KeyboardInput` messages for text entry, `MessageReader::clear`, a run condition with `not(in_state(..))` |
 | 7e | `src/timer.rs` | `BTreeMap`, `Option::is_none_or`, integer arithmetic for `m:ss.t`, match guards (`Some(_) if ...`) | messages between plugins (`LevelCompleted`), `.after(reach_goal)`, filling a slot on another screen (`CardSlot`) |
 | 7f | `src/synth.rs`, `src/audio.rs` | `f32` math (`sin`, `powf`, `exp`), writing a binary format by hand (`to_le_bytes`), `Arc<[u8]>`, `HashMap` | `Assets<AudioSource>`, `AudioPlayer` and `PlaybackSettings`, `AudioSink` volume, a custom `SystemParam` grouping several `MessageReader`s |
+| 7g | `src/journal.rs` | building UI in loops with `with_children`, `BTreeSet`, wrapping indices with `%` | run conditions combined with `or_else`, a screen that remembers where it was opened from (`JournalView::back_to`), rebuilding UI when a resource changes |
 | 8 | `src/straw.rs` | `Option<f32>` as a timer, `as_mut`, `iter_mut().flatten()` | systems ordered after another plugin's system (`.after`), `Visibility`, messages between plugins (`Respawned`) |
 | 9 | `src/solver.rs` | `BinaryHeap` with a custom `Ord`, `HashSet` of tuple keys, `Option` chains, indices instead of references for a tree | none: it calls the same pure functions the systems use (`player::step`, `lens::try_shift`) |
 | 10 | `src/sim_tests.rs` | tuples as return values, `unwrap_or_else` with `panic!`, `assert_eq!` with a message | running plugins headless (`MinimalPlugins`), a fixed clock (`TimeUpdateStrategy`), simulated input, querying the `World` directly |
@@ -34,7 +35,7 @@ Small changes, roughly from easiest to hardest:
 3. Add a new level in `levels/` (see "Adding a level" in the README). `make test` tells you if the map is broken.
 4. Add a `C` cell that kills the player (sends them back to the start) in every lens: a new `Cell` variant, a `match` arm in `Cell::from_char`, and a check in `player.rs`. The compiler lists every `match` you forgot to update.
 5. Count how many times the player shifted in a level and show it on the concept card. You need a new resource.
-6. Add a codex: a list of the concept cards unlocked so far, opened with TAB.
+6. Let the journal open mid-level without restarting it: a pause that the gameplay systems respect.
 7. Make straw collapse cell by cell, starting where the player stands, instead of all at once.
 
 ## Notes

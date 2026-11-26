@@ -23,7 +23,7 @@
             levels: [
                 (file: "01-two-ways-of-seeing"),
                 (file: "02-inside-and-outside", unlocks: [Music]),
-                (file: "03-straw-men"),
+                (file: "03-straw-men", unlocks: [Journal]),
                 (file: "04-either-or", unlocks: [Lives]),
                 (file: "05-the-unfitting-star", ask: Name),
                 (file: "06-the-shared-crossing"),

@@ -53,6 +53,7 @@ fn game_with_store(level: usize, store: Box<dyn crate::save::Store>) -> App {
             crate::card::CardPlugin,
             crate::prompt::PromptPlugin,
             crate::timer::TimerPlugin,
+            crate::journal::JournalPlugin,
         ));
     app.world_mut().resource_mut::<Progress>().level = level;
     app.world_mut()
@@ -451,4 +452,25 @@ fn the_timer_records_best_times_once_unlocked() {
         .0
         .expect("a run");
     assert!(last.is_record());
+}
+
+#[test]
+fn solved_levels_go_into_the_journal_which_j_opens_from_the_card() {
+    let mut app = assert_solvable(0);
+    assert_eq!(app.world().resource::<Progress>().completed.len(), 1);
+    // Level 1 has no journal yet: J does nothing on its card.
+    run(&mut app, 1);
+    tap(&mut app, KeyCode::KeyJ);
+    run(&mut app, 1);
+    assert_eq!(state(&app), AppState::Card);
+
+    let mut app = assert_solvable(2);
+    run(&mut app, 1);
+    tap(&mut app, KeyCode::KeyJ);
+    run(&mut app, 1);
+    assert_eq!(state(&app), AppState::Journal);
+    tap(&mut app, KeyCode::ArrowDown);
+    tap(&mut app, KeyCode::Escape);
+    run(&mut app, 1);
+    assert_eq!(state(&app), AppState::Card, "ESC returns to the card");
 }
